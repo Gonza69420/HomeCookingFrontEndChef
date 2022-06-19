@@ -1,4 +1,4 @@
-const MenuItems= [
+export const MenuItems= [
     {
         id: 1,
         title:"Home",
@@ -26,12 +26,5 @@ const MenuItems= [
         url: "/mainPage",
         cName: "nav-link"
 
-    },
-    {
-        id: 5,
-        title:"Home",
-        url: "/mainPage",
-        cName: "nav-link"
-
-    },
+    }
 ]

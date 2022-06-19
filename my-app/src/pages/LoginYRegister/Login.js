@@ -10,6 +10,7 @@ export const Login = () => {
 
     const onSubmit = (e) => {
         console.log(data);
+        e.preventDefault();
             fetch("http://localhost:8080/api/auth/signin", {
             method: "POST",
             headers: {
@@ -20,15 +21,14 @@ export const Login = () => {
                 password: data.password
             })
                 })
-            .then(res => sessionStorage.setItem('token', res.token)
-                    )
+            .then(res => sessionStorage.setItem('token', res.token))
             .then(data => {
                 console.log(data);
                 window.location.href = '/mainPage';
             }
             )
             .catch(err => console.log(err));
-        e.preventDefault();
+       
     }
 
     const handleChange = (e) => {
@@ -42,7 +42,7 @@ export const Login = () => {
 
 
     return(
-       <div>
+       <div className="">
             <h1>Login</h1>
             <Container id= "main-container" className="d-grid h-100">
             <Form id="sign in-form" action="" onSubmit={onSubmit} className = "text-center w-100">

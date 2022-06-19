@@ -3,6 +3,9 @@ import Navbar from '../../components/Navbar';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export  const MainPage = () => {
+  //  const [data , setData] = useState();
+
+
 
     useEffect(() => {
         console.log(sessionStorage.getItem('token'));
@@ -11,10 +14,18 @@ export  const MainPage = () => {
         }
     })
 
-    
+  /*  useEffect(() => {
+        fetch("")
+      .then(response => response.json())
+      .then(data => {
+        setData(data)
+      })
+    })
+    */
     return(
         <div>
-            <Navbar/>            
+          <Navbar/>
+           <h1>MainPage</h1>      
         </div>
     )
 }
