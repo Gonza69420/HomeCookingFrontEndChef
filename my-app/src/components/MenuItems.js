@@ -1,3 +1,4 @@
+
 export const MenuItems= [
     {
         id: 1,
@@ -9,13 +10,13 @@ export const MenuItems= [
     {
         id: 2,
         title:"Perfil",
-        url: "/mainPage",
+        url: "/profile",
         cName: "nav-link"
 
     },
     {
         id: 3,
-        title:"Pedidos",
+        title:"Reviews",
         url: "/mainPage",
         cName: "nav-link"
 

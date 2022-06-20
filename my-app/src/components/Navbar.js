@@ -5,11 +5,7 @@ import { Button } from './Button';
 
 
 const Navbar = ()=> {
-  const [clicked , setClicked] = useState(false);
-
-  const handleClick = () => {
-    setClicked(!clicked);
-  }
+  
 
   const logOutClick = () => {
     sessionStorage.removeItem('token');
@@ -18,11 +14,9 @@ const Navbar = ()=> {
 
     return (
       <nav className='NavbarItems'>
-          <h1 className='navbar-logo'>HomeCooking<i className='fab fa-react'></i></h1>
-          <div className='menu-icons' onClick={handleClick}>
-            <i className={clicked ? "fas fa-times" : "fas fa-bars"}></i>
-          </div>
-          <ul className={clicked ? 'nav-menu active' : 'nav-menu'}>
+          <h1 className='navbar-logo'>HomeCooking<i className='fab '></i></h1>
+          
+          <ul className='nav-menu'>
             {MenuItems.map((item, index) => {
               return (
                 <li key={index}>
