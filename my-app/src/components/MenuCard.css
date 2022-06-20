@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+/*color variable*/
+
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font-family: 'Open Sans', sans-serif;
+    margin: 2rem;
+}
+/* Esto para lo que encierra a las cards*/
+
+.card{
+    overflow: hidden;
+    box-shadow: 0 2px 20px #e1e5ee;
+    border-radius: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 200m ease-in;
+
+    
+}
+
+.card:hover{
+    transform: scale(1.05);
+}
+
+.card-image-top{
+    height: 12rem;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-tittle{
+    padding: 1rem;
+}
+
+.card-description{
+    padding: 0 1rem;
+}
+
+
+                            
