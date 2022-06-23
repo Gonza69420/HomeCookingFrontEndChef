@@ -1,0 +1,31 @@
+.wrapper{      
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 16rem));
+    grid-row: 1;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.card{
+    overflow: hidden;
+    box-shadow: 0 2px 20px #e1e5ee;
+    border-radius: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 200m ease-in;
+    
+    
+}
+
+
+.card .anadirLabel{
+    background-color: rgb(128, 124, 124);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+}
+                            
+

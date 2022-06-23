@@ -1,25 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
-/*color variable*/
-
-
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body{
-    font-family: 'Open Sans', sans-serif;
-    margin: 2rem;
-}
 /* Esto para lo que encierra a las cards*/
 .wrapper{      
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 16rem));
-    grid-row: 1;
-    gap: 2rem;
-    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .card{
@@ -31,27 +17,52 @@ body{
     justify-content: space-between;
     cursor: pointer;
     transition: transform 200m ease-in;
-
+    max-width: 300px;
+    max-height: 500px;
+    min-width: 300px;
+    min-height: 400px;
     
 }
 
-.card:hover{
-    transform: scale(1.05);
-}
 
-.card-image-top{
+
+
+.card .card-img-top{
     height: 12rem;
     width: 100%;
     object-fit: cover;
 }
 
-.card-tittle{
+.card .card-tittle{
     padding: 1rem;
 }
 
-.card-description{
+.card .card-description{
     padding: 0 1rem;
 }
 
+.cardRestaurant{
+    overflow: hidden;
+    box-shadow: 0 2px 20px #e1e5ee;
+    border-radius: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 200m ease-in;
+    max-width: 300px;
+    max-height: 500px;
+    min-width: 300px;
+    min-height: 400px;
+}
 
-                            
+.cardRestaurant .card-body{
+    padding: 50px;
+}
+
+.cardRestaurant .card-body .cardtitle{
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size:xx-large;
+}
