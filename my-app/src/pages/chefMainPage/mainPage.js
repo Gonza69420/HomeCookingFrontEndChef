@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BsCheckSquare,  BsFillXSquareFill} from "react-icons/bs";
 import { Stack } from 'react-bootstrap';
 
-
 export  const MainPage = () => {
   const [data , setData] = useState();
   const [buscar, setBuscar] = useState();
@@ -50,6 +49,7 @@ export  const MainPage = () => {
     return(
         <div>
           <Navbar/>
+
           <div className='container mt-5'>
           <Stack direction="horizontal" className='justify-content-start mt-2' gap={3}>
             <h1>MainPage</h1> 
