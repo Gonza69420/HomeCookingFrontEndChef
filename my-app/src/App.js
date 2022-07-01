@@ -5,6 +5,7 @@ import { Register } from './pages/LoginYRegister/Register';
 import { Login } from './pages/LoginYRegister/Login';
 import { MainPage } from './pages/chefMainPage/mainPage';
 import { ProfileChef } from './pages/chefProfile/ProfileChef';
+import { ChefReviews } from './pages/chefReviews/ChefReviews';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/register" element={<Register/>} />
           <Route path="/mainPage" element= {<MainPage/>}/>
           <Route path='/profile' element={<ProfileChef/>}/>
+          <Route path='/review' element={<ChefReviews/>}/>
         </Routes>
       </Router>
     </div>

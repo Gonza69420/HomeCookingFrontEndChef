@@ -17,7 +17,7 @@ export const MenuItems= [
     {
         id: 3,
         title:"Reviews",
-        url: "/mainPage",
+        url: "/review",
         cName: "nav-link"
 
     },

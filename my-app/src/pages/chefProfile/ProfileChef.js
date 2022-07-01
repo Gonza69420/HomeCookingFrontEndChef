@@ -40,13 +40,18 @@ export const ProfileChef = () => {
             <Navbar/>
             <div className='container mt-5 bg-white'>
                 <Stack direction="horizontal" className='justify-content-start' gap={3}>
-                    <Profileimage src="https://dalstrong.com/s/files/1/1728/9189/files/Guga-Dalstrong_1024x1024.jpg?v=1608322553&em-origin=cdn.shopify.com"/>
+                    {personalizar ? 
+                    <Profileimage classname="imageprofile" src="https://dalstrong.com/s/files/1/1728/9189/files/Guga-Dalstrong_1024x1024.jpg?v=1608322553&em-origin=cdn.shopify.com" personalizar={true}/> 
+                    : 
+                    <Profileimage classname="imageprofile" src="https://dalstrong.com/s/files/1/1728/9189/files/Guga-Dalstrong_1024x1024.jpg?v=1608322553&em-origin=cdn.shopify.com" personalizar={false}/>
+                    }
+    
                     <h1>Guga Foods  </h1> 
                     <button type="button" onClick={handlePersonalizar} className="btn btn-secondary btn-lg">
                         <TbPencil/> 
                     </button>
                 </Stack>
-                <h2 className='d-flex justify-content-start mt-4 mb-4'>Restaurantes</h2>
+                <h2 className='d-flex justify-content-start mt-4 mb-4'> Restaurantes</h2>
                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                     <RestaurantCard url="https://media-cdn.tripadvisor.com/media/photo-s/05/ae/df/ab/1000-rosa-negra.jpg" name="1000 Rosa Negra"  />
                     {personalizar &&
@@ -54,7 +59,7 @@ export const ProfileChef = () => {
                     }
                     
                 </Stack>
-                <h2 className='d-flex justify-content-start mt-4 mb-4'>Menus</h2>
+                <h2 className='d-flex justify-content-start mt-4 mb-4'> Menus</h2>
                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                 <div className='wrapper'>
                     <MenuCard url="https://assets.unileversolutions.com/recipes-v2/218401.jpg" name="Hamburguesa completa" description="Plato elaborado con tira de asado 80-20" />
