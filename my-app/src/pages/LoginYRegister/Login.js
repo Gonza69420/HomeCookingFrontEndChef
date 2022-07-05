@@ -28,6 +28,7 @@ export const Login = () => {
                 } 
                 else {
                     sessionStorage.setItem('token', res.token);
+                    sessionStorage.setItem("mail" , data.username);
                 }
                 })
             .then(data => {

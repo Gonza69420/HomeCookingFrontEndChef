@@ -9,7 +9,7 @@ export  const MainPage = () => {
   const [buscar, setBuscar] = useState();
 
 
-/*
+
     useEffect(() => {
       setBuscar(true)
         if(sessionStorage.getItem('token') === null){
@@ -18,6 +18,7 @@ export  const MainPage = () => {
         }
     }, [])
 
+    /*
     useEffect(() => { //conseguir datos de 
         fetch("")
       .then(response => response.json())
@@ -32,10 +33,11 @@ export  const MainPage = () => {
     .then(data => {
     })
     }, [])
-    */
-
+    
+*/
     const handleClic = () => {
       setBuscar(!buscar);
+      
     }
 
     const botonToggle = () => {

@@ -8,7 +8,7 @@ const SIZES=[
     'btn -- medium',
     'btn -- large'
 ]
-export const Button = ({
+export const Buttonn = ({
     children,
     type,
     onClick,

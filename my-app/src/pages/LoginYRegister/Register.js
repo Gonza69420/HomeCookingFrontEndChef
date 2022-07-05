@@ -12,13 +12,14 @@ export const Register = () => {
         firstName: '',
         lastName: '',
         phone: '',
-        address: ''
+        address: '',
+        dni: ''
 
     })
 
     const onSubmit = (e) => {
         console.log(data);
-            fetch("http://localhost:8080/api/auth/signup", {
+            (fetch("http://localhost:8080/api/auth/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -29,16 +30,25 @@ export const Register = () => {
                 firstName: data.firstName,
                 lastName: data.lastName,
                 phoneNumber: data.phone,
-                address: data.address
+                address: data.address,
+                dni: data.dni,
+                role:"ROLE_CHEF"
             })
              })
-            .then(res => res.json())
-         .then(data => {
-                console.log(data);
-                window.location.href = '/';
-          }
-           )
-            .catch(err => console.log(err));
+            .then(res => {
+                if (res.status === 401 || res.status === 400 || data.username === '' || data.password === '') { 
+                    throw new Error("Invalid credentials");
+                } 
+                else {
+                    sessionStorage.setItem('token', res.token);
+                }
+                })
+            .then(data => {
+                console.log(sessionStorage.getItem('token'));
+               
+            }
+            )).catch(err => console.log(err));
+            
         e.preventDefault();
     }
 
@@ -84,6 +94,11 @@ export const Register = () => {
                 <Form.Label>Adress</Form.Label>
                 <Form.Control type="text" placeholder="Adress" name="address" onChange={handleChange}/>
             </Form.Group>
+            <Form.Group className="mb-3 w-25 m-auto" controlId="exampleForm.ControlInput6">
+                <Form.Label>DNI</Form.Label>
+                <Form.Control type="text" placeholder="DNI" name="dni" onChange={handleChange}/>
+            </Form.Group>
+            
             
             <Button variant="primary" type="submit" className="primary">
                 Submit
