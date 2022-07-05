@@ -109,7 +109,10 @@ export const ProfileChef = () => {
                     
                 </Stack>
                 <h2 className='d-flex justify-content-start mt-4 mb-4'> Menus</h2>
-                <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
+                
+                
+                
+                <Stack direction="horizontal" className='mt-4' gap={3}>
                     <MenuCard url="https://assets.unileversolutions.com/recipes-v2/218401.jpg" name="Hamburguesa completa" description="Plato elaborado con tira de asado 80-20" onClick={() => setmenuPopUp(true)}/>
                     <MenuCard url='https://dorius.com.ar/wp-content/uploads/2020/09/20220122_111911.jpg' name="Sushi Salmon" description="Mix de distintas piezas de salmon a eleccion del chef. Cantidades hablar con el chef"/>
                     <MenuCard url='https://images.rappi.com.ar/products/1026847-1597672728160.jpg' name="Ribs con Barbacoa" description="Ribs de Cerdo ahumadas con leña por 8 hs"/>
@@ -143,7 +146,7 @@ export const ProfileChef = () => {
                     </>
                     }
 
-
+            
 
                     {personalizar &&
                     <div>
