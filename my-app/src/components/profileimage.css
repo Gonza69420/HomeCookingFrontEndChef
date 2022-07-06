@@ -55,8 +55,21 @@
 }
 
 
-.reviewimageprofile .image .imagespecific{
+.imageprofile .personalizeimage .imagespecific{
     width: 100%;
-    height: auto; 
+    height: auto;  
 }
 
+
+.imageprofile .personalizeimage .imagespecific:hover{
+    filter: grayscale(0%);
+}
+
+.imageprofile .personalizeimage .inputCoso{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}

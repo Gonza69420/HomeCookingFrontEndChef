@@ -15,7 +15,8 @@ export const Profileimage = props => {
             </div>
             :
             <div className="personalizeimage">
-                <img className="imagespecific"src={props.src}/>
+                 <input type="file" className="inputCoso" id="imgupload" />
+                <label for='imgupload'><img className="imagespecific"src={props.src}/></label>
             </div>
             }
         </div>
