@@ -11,7 +11,8 @@ export  const MainPage = () => {
 
 
     useEffect(() => {
-      setBuscar(true)
+      setBuscar(true)//cambiar esto 
+      console.log(sessionStorage.getItem('token'));
         if(sessionStorage.getItem('token') === null){
           console.log(sessionStorage.getItem('token'));
             window.location.href = '/';

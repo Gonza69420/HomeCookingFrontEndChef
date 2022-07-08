@@ -35,12 +35,13 @@ export const Login = () => {
                     throw new Error("Invalid credentials");
                 } 
                 else {
-                    sessionStorage.setItem('token', res.token);
                     sessionStorage.setItem("mail" , data.username);
+                    return res.json(); 
+
                 }
                 })
             .then(data => {
-                console.log(sessionStorage.getItem('token'));
+                sessionStorage.setItem('token', data.accessToken);
                 window.location.href = '/mainPage';
             }
             )).catch(err => console.log(err));
