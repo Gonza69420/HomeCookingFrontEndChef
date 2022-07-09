@@ -9,7 +9,8 @@ export const Profileimage = props => {
     const uploadImage = () => {
         console.log(sessionStorage.getItem("mail"));
         if(imageUpload === null) return;
-        const imageRef = ref(storage , "images/client/" + sessionStorage.getItem("mail"));
+        console.log("image is not null");
+        const imageRef = ref(storage , "images/chef/" + sessionStorage.getItem("mail"));
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);

@@ -10,11 +10,18 @@ import {RestaurantCard} from "../../components/RestaurantCard"
 import { Popup } from '../../components/Popup/Popup';
 import "./ProfileChef.css"
 import { ReviewCard } from '../../components/reviewCard';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
 export const ProfileChef = () => {
     const [personalizar , setPersonalizar] = useState(false);
     const [restaurantPopUp ,setRestaurantPopUp] = useState(false);
     const [menuPopUpAdd , setmenuPopUpAdd] = useState(false);
     const [menuPopUp , setmenuPopUp] = useState(false);
+    const [imageurl, setImageUrl] = useState();
+
+    const storage = getStorage();
+
+    const imageRef = ref(storage , "images/chef/" + sessionStorage.getItem("mail") );
 
     //Variables PopUpCrearRestaurante
     const[ restaurant , setRestaurant] = useState({
@@ -54,19 +61,50 @@ export const ProfileChef = () => {
         })
     }
 
-    const handleChangeMenu = (e) => {
+   
+    const handleChangeMenu = (e)=>{}
 
-    }
+
+    useEffect(() => {
+        
+        getDownloadURL(imageRef)
+        .then((url) => {
+          setImageUrl(url);
+        })
+        .catch((error) => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/object-not-found':
+                setImageUrl("https://firebasestorage.googleapis.com/v0/b/homecooking-346302.appspot.com/o/images%2Fblank.jpg?alt=media&token=ee277b5c-bd58-4f5d-b4aa-cb90f9adf0d2");
+              // File doesn't exist
+              break;
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+      
+            // ...
+      
+            case 'storage/unknown':
+              // Unknown error occurred, inspect the server response
+              break;
+          }
+        });
+    }, [])
+
     return (
         <div className='bg-dark'>
             <Navbar/>
             <div className='container mt-5 bg-white'>
                 <Stack direction="horizontal" className='justify-content-start' gap={3}>
                     {personalizar && 
-                    <Profileimage classname="imageprofile" src="https://dalstrong.com/s/files/1/1728/9189/files/Guga-Dalstrong_1024x1024.jpg?v=1608322553&em-origin=cdn.shopify.com" personalizar={true}/> 
+                    <Profileimage classname="imageprofile" src={imageurl} personalizar={true}/> 
                     }
                     {!personalizar &&
-                    <Profileimage classname="imageprofile" src="https://dalstrong.com/s/files/1/1728/9189/files/Guga-Dalstrong_1024x1024.jpg?v=1608322553&em-origin=cdn.shopify.com" personalizar={false}/>
+                    <Profileimage classname="imageprofile" src={imageurl} personalizar={false}/>
                     }
     
                     <h1>Guga Foods  </h1> 
