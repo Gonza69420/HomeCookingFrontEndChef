@@ -40,12 +40,13 @@ export const Register = () => {
                     throw new Error("Invalid credentials");
                 } 
                 else {
-                    sessionStorage.setItem('token', res.token);
+                    return res.json();
                 }
                 })
             .then(data => {
                 console.log(sessionStorage.getItem('token'));
-               
+                window.location.href = '/';
+
             }
             )).catch(err => console.log(err));
             

@@ -4,14 +4,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BsCheckSquare,  BsFillXSquareFill} from "react-icons/bs";
 import { Stack } from 'react-bootstrap';
 import {PedidosCard} from "../../components/Pedidos"
+import "./mainPage.css"
 export  const MainPage = () => {
   const [data , setData] = useState();
   const [buscar, setBuscar] = useState();
-
-
+  const [chefData , setChefData] = useState({});
 
     useEffect(() => {
-      setBuscar(true)//cambiar esto 
       console.log(sessionStorage.getItem('token'));
         if(sessionStorage.getItem('token') === null){
           console.log(sessionStorage.getItem('token'));
@@ -19,36 +18,92 @@ export  const MainPage = () => {
         }
     }, [])
 
-    /*
-    useEffect(() => { //conseguir datos de 
-        fetch("")
-      .then(response => response.json())
-      .then(data => {
-        setData(data)
-      })
+    useEffect(() => {
+      var raw = "";
+
+      var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+
+      fetch("http://localhost:8080/api/auth/getAvailableStatus/" + sessionStorage.getItem("mail"), requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          setBuscar(result)
+          console.log(result);
+        }
+        )
+        .catch(error => console.log('error', error));
     }, [])
 
-    useEffect(() => { //conseguir datos de usuario
-      fetch("")
-    .then(response => response.json())
-    .then(data => {
-    })
-    }, [])
     
-*/
+    useEffect(() => {
+      fetch(`http://localhost:8080/api/auth/getChef/${sessionStorage.getItem('mail')}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `token ${sessionStorage.getItem('token')}`
+        }
+    }).then(response => response.json())
+    .then(data => {
+      console.log(data);
+      setChefData(data);
+    }).catch(error => {
+      console.log(error);
+    })
+    },[]);
+    
     const handleClic = () => {
       setBuscar(!buscar);
-      
+      if(buscar){
+        setBuscarChef();
+      }else{
+        setNoBuscarChef();
+      }
     }
 
-    const botonToggle = () => {
-      return() => {
-        if(buscar){
-          return <BsCheckSquare/>
-        }else{
-          return <BsFillXSquareFill/>
+
+
+
+    const setNoBuscarChef = () => {
+      var raw = "";
+
+      var requestOptions = {
+        method: 'POST',
+        body: raw,
+        redirect: 'follow'
+      };
+      fetch("http://localhost:8080/api/auth/setChefAvailable/"+ sessionStorage.getItem("mail"), requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
         }
-      }
+
+
+
+      const setBuscarChef = () => {
+            var raw = "";
+
+            var requestOptions = {
+              method: 'POST',
+              body: raw,
+              redirect: 'follow'
+            };
+            fetch("http://localhost:8080/api/auth/setChefNotAvailable/" + sessionStorage.getItem("mail"), requestOptions)
+              .then(response => response.text())
+              .then(result => console.log(result))
+              .catch(error => console.log('error', error));
+                }
+
+
+          const botonToggle = () => {
+            return() => {
+              if(buscar){
+                return <BsCheckSquare/>
+              }else{
+                return <BsFillXSquareFill/>
+              }
+            }
     }
     
     return(
@@ -56,8 +111,10 @@ export  const MainPage = () => {
           <Navbar/>
 
           <div className='container mt-5'>
-          <Stack direction="horizontal" className='justify-content-start mt-2' gap={3}>
-            <h1>MainPage</h1> 
+          <Stack direction="horizontal" className='justify-content-startmt-2' gap={3}>
+            <div className="containerTittles">
+              <h1 className='Tittles'>Welcome !</h1> 
+            </div>
               <button type="button" onClick={handleClic} className={buscar ? "btn btn-success btn-lg" : "btn btn-danger btn-lg"}>
                 {botonToggle()()}
               </button>     

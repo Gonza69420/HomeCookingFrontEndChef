@@ -1,0 +1,12 @@
+.containerTittles{
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.containerTittles .Tittles{
+    text-align: left;
+    padding: 10px;
+    background-color: rgb(233, 22, 14);
+    width: fit-content;
+    color: white;
+}

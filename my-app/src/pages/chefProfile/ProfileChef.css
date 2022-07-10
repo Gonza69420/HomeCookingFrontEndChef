@@ -33,3 +33,46 @@
 .totheright .fontbigger{
     font-size: larger;
 }
+
+.inputCoso{
+    position: absolute;
+    
+    opacity: 0;
+}
+
+.tittle{
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    background-color: rgb(233, 22, 14);
+    width: fit-content;
+    color: white;
+}
+
+.list-ingredientes{
+    padding: 10px;
+    
+}
+
+.list-ingredientes .list{
+    padding: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    list-style:none;
+}
+
+.list-ingredientes .list .insideList{
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.list-ingredientes .list .insideList .ListButton {
+    pointer-events: none;
+    margin: auto;
+}
+
+
+

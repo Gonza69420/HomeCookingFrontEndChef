@@ -10,7 +10,7 @@ import {RestaurantCard} from "../../components/RestaurantCard"
 import { Popup } from '../../components/Popup/Popup';
 import "./ProfileChef.css"
 import { ReviewCard } from '../../components/reviewCard';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 export const ProfileChef = () => {
     const [personalizar , setPersonalizar] = useState(false);
@@ -18,7 +18,11 @@ export const ProfileChef = () => {
     const [menuPopUpAdd , setmenuPopUpAdd] = useState(false);
     const [menuPopUp , setmenuPopUp] = useState(false);
     const [imageurl, setImageUrl] = useState();
-
+    const [imageUpload , setImageUpload] = useState(null);
+    const [ingredient, setIngredient] = useState('');
+    const [restaurantAdd, setRestaurantAdd] = useState({
+        name: ""
+    });
     const storage = getStorage();
 
     const imageRef = ref(storage , "images/chef/" + sessionStorage.getItem("mail") );
@@ -31,7 +35,8 @@ export const ProfileChef = () => {
     const[ menu, setMenu] = useState({
         name: "",
         descriptionCorta: "",
-        descriptionLarga: ""
+        descriptionLarga: "",
+        ingredientes: []
     });
 
     useEffect(() => {
@@ -62,7 +67,17 @@ export const ProfileChef = () => {
     }
 
    
-    const handleChangeMenu = (e)=>{}
+    const handleChangeMenu = (e)=>{
+        setMenu({
+            ...menu,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleChangeIngredient = (e)=>{
+        if(e.target.value === ""){return;}
+        setIngredient(e.target.value);
+    }
 
 
     useEffect(() => {
@@ -95,6 +110,99 @@ export const ProfileChef = () => {
         });
     }, [])
 
+    const uploadImageMenu = (menuName) => {
+        console.log(sessionStorage.getItem("mail"));
+        if(imageUpload === null) return;
+        console.log("image is not null");
+        const imageRef = ref(storage , "images/chef/menu/" + sessionStorage.getItem("mail") + "/" + menuName);
+        uploadBytes(imageRef , imageUpload).then(() => {
+            console.log("Uploaded");
+            setImageUpload(null);
+        }
+        ).catch(err => {
+            console.log(err);
+        }
+        );
+    }
+
+    const uploadImageRestaurant = (RestaurantName) => {
+        console.log(sessionStorage.getItem("mail"));
+        if(imageUpload === null) return;
+        console.log("image is not null");
+        const imageRef = ref(storage , "images/chef/restaurant/" + sessionStorage.getItem("mail") + "/" + RestaurantName);
+        uploadBytes(imageRef , imageUpload).then(() => {
+            console.log("Uploaded");
+            setImageUpload(null);
+        }
+        ).catch(err => {
+            console.log(err);
+        }
+        );
+    }
+
+    const handleCancelButtonMenu = () => {
+        setmenuPopUpAdd(false);
+        setImageUpload(null);
+        setMenu({
+            name: "",
+            descriptionCorta: "",
+            descriptionLarga: "",
+            ingredientes: []
+        });
+    }
+
+    const handleSaveButtonMenu = () => {
+        uploadImageRestaurant(menu.name);
+
+    }
+
+    function removeItem(index) {
+        const items = menu.ingredientes.filter((e, idx) => idx !== index); 
+        setMenu({
+            ...menu,
+            ingredientes: items
+        })
+      }
+
+
+    const addItem = () => {
+        menu.ingredientes.push(ingredient);
+
+        console.log(menu.ingredientes);
+      }  
+
+    const handleCancelButtonRestaurant = () => {
+        setRestaurantPopUp(false);
+        setImageUpload(null);
+        setRestaurantAdd({
+            name: ""
+        });
+    }
+
+    const handleSaveButtonRestaurant = () => {
+        setRestaurantPopUp(false);
+        setImageUpload(null);
+    }
+
+    const ListIngredientes = (props) => {
+        return (
+            <div className="list-ingredientes">
+                <ul className="list" >
+                    {props.ingredientes.map((ingrediente, index) => {
+                        return (
+                            <li key={index}>
+                                {ingrediente}
+                                <Button className="cancelbutton" variant="danger" onClick={() => removeItem(index)}>X</Button>
+
+                            </li>
+                        )
+                    }
+                    )}
+                </ul>
+            </div>
+        )
+    }
+
     return (
         <div className='bg-dark'>
             <Navbar/>
@@ -121,21 +229,27 @@ export const ProfileChef = () => {
                     {restaurantPopUp && 
                     <>
                         <Popup setTrigger={setRestaurantPopUp} trigger={restaurantPopUp} type="popup-innerAdd">
-                            <div className='container-fluid mt-5'>    
-                                <h1 className='tituloPopUp'>Añadir Restaurante</h1>
+                        <h1 className='tittle'>Añadir Restaurante</h1>
+                        
+                        <div className='container-fluid mt-5'>    
+
+                        <input type="file" className="inputCoso" id="imgupload" onChange={(event) => {
+                            setImageUpload(event.target.files[0]);
+                        } } />
+                        <label for='imgupload'><button class="btn btn-warning">Upload Image</button></label>
                             
                                 <br/>
                                 <Form >
                                 <Form.Group className="m-3 " controlId="">
-                                <Form.Control type="text" placeholder="Enter Restaurant Name..." onChange={handleChangeRestaurant} name="nameRestaurant"/>
+                                <Form.Control type="text" placeholder="Enter Restaurant Name..." onChange={handleChangeRestaurant} name="name"/>
                                 </Form.Group>
                                 </Form>
 
                             </div>
                             <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                                 <div className="centerItems">
-                                <Button className="cancelbutton" variant="danger">Cancel</Button>
-                                <Button className="successbutton"variant="success">Save</Button>
+                                <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonRestaurant}>Cancel</Button>
+                                <Button className="successbutton"variant="success" onClick={handleSaveButtonRestaurant}>Save</Button>
                                 </div>
                             </Stack>
                         </Popup>
@@ -184,7 +298,7 @@ export const ProfileChef = () => {
                     </>
                     }
 
-            
+                    
 
                     {personalizar &&
                     <div>
@@ -192,9 +306,14 @@ export const ProfileChef = () => {
                     {menuPopUpAdd && 
                         <>
                             <Popup setTrigger={setmenuPopUpAdd} trigger={menuPopUpAdd} type="popup-innerAdd">
-                                <h1 className='tituloPopUp'>Añadir Menu</h1>
+                                <h1 className='tittle'>Añadir Menu</h1>
 
                                 <br/>
+                                <input type="file" className="inputCoso" id="imgupload" onChange={(event) => {
+                                    setImageUpload(event.target.files[0]);
+                                } } />
+                                <label for='imgupload'><button class="btn btn-warning">Upload Image</button></label>
+                                
                                 <Form >
                                 <Form.Group className="m-3 " controlId="">
                                     <Form.Control type="text" placeholder="Enter Menu Name..." onChange={handleChangeMenu} name="nameRestaurant"/>
@@ -205,12 +324,19 @@ export const ProfileChef = () => {
                                 <Form.Group className="m-3 " controlId="">
                                     <Form.Control type="text" placeholder="Enter Descripcion Larga..." onChange={handleChangeMenu} name="descripcionlarga"/>
                                 </Form.Group>
+
+                                <Form.Group className="m-3 " controlId="">
+                                    <Form.Control type="text" placeholder="Enter Ingredientes..." onChange={handleChangeIngredient} name="ingredientes"/>
+                                </Form.Group>
                                 </Form>
+                                <button className="btn btn-dark" onClick={addItem}>Add Ingrediente</button>
+
+                                <ListIngredientes ingredientes = {menu.ingredientes}/>
 
                                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                                 <div className="centerItems">
-                                <Button className="cancelbutton" variant="danger">Cancel</Button>
-                                <Button className="successbutton"variant="success">Save</Button>
+                                <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonMenu}>Cancel</Button>
+                                <Button className="successbutton"variant="success" onClick={handleSaveButtonMenu}>Save</Button>
                                 </div>
                             </Stack>
                             </Popup>
