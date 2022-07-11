@@ -21,7 +21,8 @@ export const ProfileChef = () => {
     const [imageUpload , setImageUpload] = useState(null);
     const [ingredient, setIngredient] = useState('');
     const [restaurantAdd, setRestaurantAdd] = useState({
-        name: ""
+        name: "",
+        imageurl : ""
     });
     const [chefData , setChefData] = useState({
         id : "",
@@ -37,7 +38,7 @@ export const ProfileChef = () => {
         menus: [{
             id: "",
             name: "",
-            image_url: "",
+            imageurl: "",
             category: "",
             shortDescription: "",
             description: ""
@@ -49,18 +50,13 @@ export const ProfileChef = () => {
 
     const storage = getStorage();
 
-    //Variables PopUpCrearRestaurante
-    const[ restaurant , setRestaurant] = useState({
-        name: ""
-    });
 
     const[ menu, setMenu] = useState({
         name: "",
         shortDescription: "",
         description: "",
-        ingredients: [],
         category: "",
-        image_url: ""
+        imageurl: ""
     });
 
     useEffect(() => {
@@ -82,7 +78,8 @@ export const ProfileChef = () => {
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            setChefData(result)
+            setChefData(result);
+            
         }
             )
         .catch(error => console.log('error', error));
@@ -94,8 +91,8 @@ export const ProfileChef = () => {
     }
 
     const handleChangeRestaurant = (e)=>{
-        setRestaurant({
-            ...restaurant,
+        setRestaurantAdd({
+            ...restaurantAdd,
             [e.target.name]: e.target.value
         })
     }
@@ -108,17 +105,25 @@ export const ProfileChef = () => {
         })
     }
 
-    const handleChangeIngredient = (e)=>{
-        if(e.target.value === ""){return;}
-        setIngredient(e.target.value);
-    }
 
 
-    const getURL = (imageRef) => {
+    const getURL = (imageRef, what) => {
         
         getDownloadURL(imageRef)
         .then((url) => {
-          return url;
+            console.log(url);
+            if(what === "restaurant"){
+                setRestaurantAdd({
+                    ...restaurantAdd,
+                    imageurl: url
+                })
+            }
+            else if(what === "menu"){
+                setMenu({
+                    ...menu,
+                    imageurl: url
+                })
+            }
         })
         .catch((error) => {
           // A full list of error codes is available at
@@ -178,39 +183,56 @@ export const ProfileChef = () => {
         setImageUpload(null);
         setMenu({
             name: "",
-            descriptionCorta: "",
-            descriptionLarga: "",
-            ingredientes: []
-        });
+        shortDescription: "",
+        description: "",
+        category: "",
+        imageurl: ""
+                });
     }
 
     const handleSaveButtonMenu = () => {
         uploadImageMenu(menu.name);
-
         const imageRef = ref(storage , "images/chef/menu/" + sessionStorage.getItem("mail") + "/" + menu.name);
+        getURL(imageRef, "menu");
 
+        console.log(menu);
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
         
-
         var raw = JSON.stringify({
             name : menu.name,
             shortDescription : menu.shortDescription,
             description : menu.description,
-            image_URL : getURL(imageRef)
-            });
-
+            imageurl : menu.imageurl,
+            category: menu.category
+        });
+        
         var requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: raw,
-            redirect: 'follow'
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            mode: 'no-cors'
+          },
+          body: raw,
+          redirect: 'follow'
         };
-
+        
         fetch("http://localhost:8080/dbInfo/NewMenu/" + sessionStorage.getItem("mail"), requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+          .then(response => response.text())
+          .then(result => {
+            console.log(result)
+            setMenu({
+            name: "",
+            shortDescription: "",
+            description: "",
+            category: "",
+            imageurl: ""
+          })
+          window.location.reload(false);
+          }
+          )
+          .catch(error => console.log('error', error));
 
     }
 
@@ -228,15 +250,16 @@ export const ProfileChef = () => {
 
     const handleSaveButtonRestaurant = () => {
         uploadImageRestaurant(restaurantAdd.name);
-
         const imageRef = ref(storage , "images/chef/restaurant/" + sessionStorage.getItem("mail") + "/" + restaurantAdd.name);
+        getURL(imageRef, "restaurant");
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
         name: restaurantAdd.name,
-        imageURL: getURL(imageRef)
+        imageURL: restaurantAdd.imageurl,
+        ChefProfile: {}
         });
 
         var requestOptions = {
@@ -248,7 +271,15 @@ export const ProfileChef = () => {
 
         fetch("http://localhost:8080/dbInfo/CreateRestaurant/" + sessionStorage.getItem("mail"), requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => {
+            console.log(result)
+            setRestaurantAdd({
+                name: "",
+                imageurl : ""
+            })
+           // window.location.reload(false);
+
+        })
         .catch(error => console.log('error', error));
 
         setRestaurantPopUp(false);
@@ -257,10 +288,14 @@ export const ProfileChef = () => {
 
 
     const handleChangeBio = (e)=>{
-        setBio(e.target.value);
+        setChefData({
+            ...chefData,
+            [e.target.name]: e.target.value
+        })
     }
 
     const handleSaveBio = () => {
+        console.log(bio);
         var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
 
@@ -269,7 +304,8 @@ export const ProfileChef = () => {
             method: 'POST',
             headers: myHeaders,
             body: JSON.stringify({
-                bio: bio
+                bio: bio,
+                imageurl: ""
                 }),
             redirect: 'follow'
             };

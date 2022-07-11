@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./profileimage.css"
 import { storage } from "../firebase";
-import { ref , uploadBytes} from "firebase/storage";
+import { ref , uploadBytes, getDownloadURL} from "firebase/storage";
 export const Profileimage = props => {
     const [personalizar , setPersonalizar] = useState(!props.personalizar);
     const [imageUpload , setImageUpload] = useState(null);
-
+    const [image , setImage] = useState("");
 
     const uploadImage = () => {
         console.log(sessionStorage.getItem("mail"));
@@ -15,7 +15,6 @@ export const Profileimage = props => {
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);
-            window.location.reload(false);
 
         }
         ).catch(err => {
@@ -27,11 +26,14 @@ export const Profileimage = props => {
     }
 
     const setChefImage = (imageRef) => {
+        getURL(imageRef)
+        console.log(image)
+        if(image === "") return;
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-
         var raw = JSON.stringify({
-        "imageURL": getURL(imageRef)
+        imageurl: image,
+        bio: ""
         });
 
         var requestOptions = {
@@ -43,7 +45,12 @@ export const Profileimage = props => {
 
         fetch("http://localhost:8080/api/auth/editChefImage/" + sessionStorage.getItem("mail"), requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => {
+            console.log(result)
+            window.location.reload(false);
+
+        }
+        )
         .catch(error => console.log('error', error));
     }
 
@@ -52,7 +59,7 @@ export const Profileimage = props => {
         
         getDownloadURL(imageRef)
         .then((url) => {
-          return url;
+          setImage(url);
         })
         .catch((error) => {
           // A full list of error codes is available at
