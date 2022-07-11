@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar'
 import { Buttonn } from '../../components/Button'
-import { TbPencil } from "react-icons/tb";
+import { TbPencil , TbCheck} from "react-icons/tb";
 import { Stack, Button, Form } from 'react-bootstrap';
 import {MenuCard} from '../../components/MenuCard'
 import AnadirCard from '../../components/anadirCard';
@@ -23,9 +23,31 @@ export const ProfileChef = () => {
     const [restaurantAdd, setRestaurantAdd] = useState({
         name: ""
     });
-    const storage = getStorage();
+    const [chefData , setChefData] = useState({
+        id : "",
+        firstName: '',
+        lastName: '',
+        mail: '',
+        imageURL: "",
+        restaurant: [{
+            id: "",
+            imageURL: "",
+            name: ""
+        }],
+        menus: [{
+            id: "",
+            name: "",
+            image_url: "",
+            category: "",
+            shortDescription: "",
+            description: ""
+        }],
+        bio: ''
+       });
 
-    const imageRef = ref(storage , "images/chef/" + sessionStorage.getItem("mail") );
+    const [bio , setBio] = useState('');
+
+    const storage = getStorage();
 
     //Variables PopUpCrearRestaurante
     const[ restaurant , setRestaurant] = useState({
@@ -34,9 +56,11 @@ export const ProfileChef = () => {
 
     const[ menu, setMenu] = useState({
         name: "",
-        descriptionCorta: "",
-        descriptionLarga: "",
-        ingredientes: []
+        shortDescription: "",
+        description: "",
+        ingredients: [],
+        category: "",
+        image_url: ""
     });
 
     useEffect(() => {
@@ -45,15 +69,25 @@ export const ProfileChef = () => {
         }
     }, [])
 
-   /*
+   
     useEffect(() => { //conseguir datos de Perfil
-        fetch("")
-      .then(response => response.json())
-      .then(data => {
-        //setData(data)
-      })
+
+        var requestOptions = {
+        method: 'GET',
+        
+        redirect: 'follow'
+        };
+
+        fetch("http://localhost:8080/api/auth/getChefProfile/" + sessionStorage.getItem("mail"), requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            setChefData(result)
+        }
+            )
+        .catch(error => console.log('error', error));
     }, [])
-    */
+    
 
     const handlePersonalizar = () => {
         setPersonalizar(!personalizar);
@@ -80,18 +114,17 @@ export const ProfileChef = () => {
     }
 
 
-    useEffect(() => {
+    const getURL = (imageRef) => {
         
         getDownloadURL(imageRef)
         .then((url) => {
-          setImageUrl(url);
+          return url;
         })
         .catch((error) => {
           // A full list of error codes is available at
           // https://firebase.google.com/docs/storage/web/handle-errors
           switch (error.code) {
             case 'storage/object-not-found':
-                setImageUrl("https://firebasestorage.googleapis.com/v0/b/homecooking-346302.appspot.com/o/images%2Fblank.jpg?alt=media&token=ee277b5c-bd58-4f5d-b4aa-cb90f9adf0d2");
               // File doesn't exist
               break;
             case 'storage/unauthorized':
@@ -108,7 +141,7 @@ export const ProfileChef = () => {
               break;
           }
         });
-    }, [])
+    }
 
     const uploadImageMenu = (menuName) => {
         console.log(sessionStorage.getItem("mail"));
@@ -152,24 +185,38 @@ export const ProfileChef = () => {
     }
 
     const handleSaveButtonMenu = () => {
-        uploadImageRestaurant(menu.name);
+        uploadImageMenu(menu.name);
+
+        const imageRef = ref(storage , "images/chef/menu/" + sessionStorage.getItem("mail") + "/" + menu.name);
+
+        
+
+        var raw = JSON.stringify({
+            name : menu.name,
+            shortDescription : menu.shortDescription,
+            description : menu.description,
+            image_URL : getURL(imageRef)
+            });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("http://localhost:8080/dbInfo/NewMenu/" + sessionStorage.getItem("mail"), requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
 
     }
 
-    function removeItem(index) {
-        const items = menu.ingredientes.filter((e, idx) => idx !== index); 
-        setMenu({
-            ...menu,
-            ingredientes: items
-        })
-      }
+ 
 
 
-    const addItem = () => {
-        menu.ingredientes.push(ingredient);
-
-        console.log(menu.ingredientes);
-      }  
 
     const handleCancelButtonRestaurant = () => {
         setRestaurantPopUp(false);
@@ -180,27 +227,57 @@ export const ProfileChef = () => {
     }
 
     const handleSaveButtonRestaurant = () => {
+        uploadImageRestaurant(restaurantAdd.name);
+
+        const imageRef = ref(storage , "images/chef/restaurant/" + sessionStorage.getItem("mail") + "/" + restaurantAdd.name);
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        name: restaurantAdd.name,
+        imageURL: getURL(imageRef)
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch("http://localhost:8080/dbInfo/CreateRestaurant/" + sessionStorage.getItem("mail"), requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+
         setRestaurantPopUp(false);
-        setImageUpload(null);
+        
     }
 
-    const ListIngredientes = (props) => {
-        return (
-            <div className="list-ingredientes">
-                <ul className="list" >
-                    {props.ingredientes.map((ingrediente, index) => {
-                        return (
-                            <li key={index}>
-                                {ingrediente}
-                                <Button className="cancelbutton" variant="danger" onClick={() => removeItem(index)}>X</Button>
 
-                            </li>
-                        )
-                    }
-                    )}
-                </ul>
-            </div>
-        )
+    const handleChangeBio = (e)=>{
+        setBio(e.target.value);
+    }
+
+    const handleSaveBio = () => {
+        var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+
+            var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify({
+                bio: bio
+                }),
+            redirect: 'follow'
+            };
+
+            fetch("http://localhost:8080/api/auth/editChefBio/" + sessionStorage.getItem("mail"), requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
     }
 
     return (
@@ -209,20 +286,49 @@ export const ProfileChef = () => {
             <div className='container mt-5 bg-white'>
                 <Stack direction="horizontal" className='justify-content-start' gap={3}>
                     {personalizar && 
-                    <Profileimage classname="imageprofile" src={imageurl} personalizar={true}/> 
+                    <Profileimage classname="imageprofile" src={chefData.imageURL} personalizar={true}/> 
                     }
                     {!personalizar &&
-                    <Profileimage classname="imageprofile" src={imageurl} personalizar={false}/>
+                    <Profileimage classname="imageprofile" src={chefData.imageURL} personalizar={false}/>
                     }
     
-                    <h1>Guga Foods  </h1> 
+                    <h1>{chefData.firstName} {chefData.lastName}  </h1> 
                     <button type="button" onClick={handlePersonalizar} className="btn btn-secondary btn-lg">
                         <TbPencil/> 
                     </button>
                 </Stack>
+
+                <h2 className='d-flex justify-content-start mt-4 '>Bio</h2>
+
+                {!personalizar &&
+                <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
+                <p>
+                {chefData.bio}
+                </p>
+                </Stack>
+                }
+                {personalizar &&
+                    <form>
+                      <textarea className='inputBio' type="text" name="bio" onChange={handleChangeBio}>
+                        {chefData.bio}
+                      </textarea>
+                      <div className="d-grid gap-2">
+                      <button type="button" onClick={handleSaveBio} className="btn btn-info btn-lg">
+                        <TbCheck/>
+                      </button>
+                      </div>
+                  </form>
+
+                }
+
                 <h2 className='d-flex justify-content-start mt-4 mb-4'> Restaurantes</h2>
                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
-                    <RestaurantCard url="https://media-cdn.tripadvisor.com/media/photo-s/05/ae/df/ab/1000-rosa-negra.jpg" name="1000 Rosa Negra"  />
+
+                    {chefData.restaurant.map((restaurant, index) => {
+                        return (
+                        <RestaurantCard url={restaurant.imageURL} name={restaurant.name}  />
+                        )
+                    })}
                     {personalizar &&
                     <div>
                     <AnadirCard onClick={() => setRestaurantPopUp(true)}/>
@@ -265,38 +371,46 @@ export const ProfileChef = () => {
                 
                 
                 <Stack direction="horizontal" className='mt-4' gap={3}>
-                    <MenuCard url="https://assets.unileversolutions.com/recipes-v2/218401.jpg" name="Hamburguesa completa" description="Plato elaborado con tira de asado 80-20" onClick={() => setmenuPopUp(true)}/>
-                    <MenuCard url='https://dorius.com.ar/wp-content/uploads/2020/09/20220122_111911.jpg' name="Sushi Salmon" description="Mix de distintas piezas de salmon a eleccion del chef. Cantidades hablar con el chef"/>
-                    <MenuCard url='https://images.rappi.com.ar/products/1026847-1597672728160.jpg' name="Ribs con Barbacoa" description="Ribs de Cerdo ahumadas con leña por 8 hs"/>
+                    {chefData.menus.map((menu, index) => {
+                        return (
+                            <div>
+                                <MenuCard url={menu.imageURL} name={menu.name} description={menu.descriptionCorta} onClick={() => setmenuPopUp(true)} />
 
-                    {menuPopUp &&
-                    <>
-                        <Popup setTrigger={setmenuPopUp} trigger={menuPopUp} type="popup-inner">
-                        <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
-                        <h1 className="topright">Hamburguesa Completa</h1>
-                        <img className ="MenuImage" src='https://assets.unileversolutions.com/recipes-v2/218401.jpg'/>
-                        </Stack>
-                        <h3 className='d-flex justify-content-start mt-4 mb-4'>Descripcion:</h3>
-                        <p className='totheright'>Una hamburguesa es un sándwich hecho a base de carne molida o de origen vegetal,1 aglutinada en forma de filete cocinado a la parrilla o a la plancha, aunque también puede freírse u hornearse. Fuera del ámbito de habla hispana, es más común encontrar la denominación estadounidense burger, acortamiento de hamburger. Se presenta en un pan ligero partido en dos que posee forma de óvalo. Suele estar acompañada de aros de cebolla, hojas de lechuga, alguna rodaja de tomate, láminas de encurtidos y papas fritas. Se suele aliñar con algún condimento, como puede ser la salsa de tomate (o kétchup), la mostaza, el relish, o la mayonesa, entre otros.2 En el caso de que se ponga una lámina de queso procesado, se convierte en una hamburguesa con queso (cheeseburger),3 denominada a veces hamburguesa amarilla. La invención del bocadillo de hamburguesa en el siglo XIX es polémica, ya que diversos autores se atribuyen haber sido los primeros en haber puesto un filete de carne molida (hamburger steak) entre dos panecillos.4 La hamburguesa creció durante el siglo XX junto a la aparición del concepto comida rápida y durante ese siglo fue adquiriendo un simbolismo especial. Forma parte de uno de los alimentos icono de la cocina estadounidense (junto al pollo frito y la tarta de manzana). La primera cadena de restaurantes que puso en circulación la hamburguesa como comida rápida fue White Castle en la década de 1920 (cuyo ideólogo fue Edgar Waldo "Billy" Ingram),5 y posteriormente durante la década de 1940 con McDonald's (asumida por el ejecutivo Ray Kroc),6 así como Burger King. La hamburguesa es, en la actualidad, un alimento tan popular que aparece con sus diversas variantes en casi todas las culturas, al igual que otros alimentos, como pueden ser la pizza, el perro caliente y los tacos.</p>
-                        <br/>
+                            {menuPopUp &&
+                                <>
+                                    <Popup setTrigger={setmenuPopUp} trigger={menuPopUp} type="popup-inner">
+                                    <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
+                                    <h1 className="topright">{menu.name}</h1>
+                                    <img className ="MenuImage" src='https://assets.unileversolutions.com/recipes-v2/218401.jpg'/>
+                                    </Stack>
+                                    <h3 className='d-flex justify-content-start mt-4 mb-4'>Descripcion:</h3>
+                                    <p className='totheright'>{menu.descriptionLarga}</p>
+                                    <br/>
+            
+                                    <h3 className='d-flex justify-content-start mt-4 mb-4'>Ingredientes:</h3>
+                                    <ul className='totheright'>
+                                        {menu.ingredientes.map((ingrediente, index) => {
+                                            return (
+                                                <li className='fontbigger'>{ingrediente}</li>
+                                            )
+                                        }
+                                        )}
+                                        
+                                    </ul>
+                                    
+                                    <br/>
+            
+                                    <h3 className='d-flex justify-content-start mt-4 mb-4'>Reviews:</h3>
+                                    <ReviewCard firstname="Raul" lastname="Salvio" review="Interesante el concepto. Mercado Libre es una herramienta" src="https://pbs.twimg.com/media/BcFrAwtIYAAsqsE.jpg" stars={3}/>
+            
+                                    </Popup>
+                                </>
+                                }
+                            </div>
+                        )
+                    })}
 
-                        <h3 className='d-flex justify-content-start mt-4 mb-4'>Ingredientes:</h3>
-                        <ul className='totheright'>
-                            <li className='fontbigger'>Pan</li>
-                            <li className='fontbigger'>Queso</li>
-                            <li className='fontbigger'>Carne</li>
-                            <li className='fontbigger'>Pan</li>
-                        </ul>
-                        
-                        <br/>
 
-                        <h3 className='d-flex justify-content-start mt-4 mb-4'>Reviews:</h3>
-                        <ReviewCard firstname="Raul" lastname="Salvio" review="Interesante el concepto. Mercado Libre es una herramienta" src="https://pbs.twimg.com/media/BcFrAwtIYAAsqsE.jpg" stars={3}/>
-                        <ReviewCard firstname="Raul" lastname="Salvio" review="Interesante el concepto. Mercado Libre es una herramienta" src="https://pbs.twimg.com/media/BcFrAwtIYAAsqsE.jpg" stars={3}/>
-
-                        </Popup>
-                    </>
-                    }
 
                     
 
@@ -316,22 +430,19 @@ export const ProfileChef = () => {
                                 
                                 <Form >
                                 <Form.Group className="m-3 " controlId="">
-                                    <Form.Control type="text" placeholder="Enter Menu Name..." onChange={handleChangeMenu} name="nameRestaurant"/>
+                                    <Form.Control type="text" placeholder="Enter Menu Name..." onChange={handleChangeMenu} name="name"/>
                                 </Form.Group>
                                 <Form.Group className="m-3 " controlId="">
-                                    <Form.Control type="text" placeholder="Enter Descripcion Corta..." onChange={handleChangeMenu} name="descripcioncorta"/>
+                                    <Form.Control type="text" placeholder="Enter Descripcion Corta..." onChange={handleChangeMenu} name="shortDescription"/>
                                 </Form.Group>
                                 <Form.Group className="m-3 " controlId="">
-                                    <Form.Control type="text" placeholder="Enter Descripcion Larga..." onChange={handleChangeMenu} name="descripcionlarga"/>
+                                    <Form.Control type="text" placeholder="Enter Descripcion Larga..." onChange={handleChangeMenu} name="description"/>
                                 </Form.Group>
-
                                 <Form.Group className="m-3 " controlId="">
-                                    <Form.Control type="text" placeholder="Enter Ingredientes..." onChange={handleChangeIngredient} name="ingredientes"/>
+                                    <Form.Control type="text" placeholder="Enter Categoria..." onChange={handleChangeMenu} name="category"/>
                                 </Form.Group>
+                                
                                 </Form>
-                                <button className="btn btn-dark" onClick={addItem}>Add Ingrediente</button>
-
-                                <ListIngredientes ingredientes = {menu.ingredientes}/>
 
                                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                                 <div className="centerItems">
