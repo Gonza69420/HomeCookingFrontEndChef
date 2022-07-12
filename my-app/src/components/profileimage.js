@@ -15,14 +15,13 @@ export const Profileimage = props => {
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);
-
+            setChefImage(imageRef);
         }
         ).catch(err => {
             console.log(err);
         }
         );
 
-        setChefImage(imageRef);
     }
 
     const setChefImage = (imageRef) => {
@@ -98,7 +97,7 @@ export const Profileimage = props => {
                    
                    
                     } } />
-                <label for='imgupload'><img className="imagespecific"src={props.src}/></label>
+                <label className="label" for='imgupload'><img className="imagespecific"src={props.src}/></label>
             </div>
             }
         </div>

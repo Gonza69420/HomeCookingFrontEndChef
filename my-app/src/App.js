@@ -6,6 +6,7 @@ import { Login } from './pages/LoginYRegister/Login';
 import { MainPage } from './pages/chefMainPage/mainPage';
 import { ProfileChef } from './pages/chefProfile/ProfileChef';
 import { ChefReviews } from './pages/chefReviews/ChefReviews';
+import { Chat } from './pages/chefChats/Chat';
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
           <Route path="/mainPage" element= {<MainPage/>}/>
           <Route path='/profile' element={<ProfileChef/>}/>
           <Route path='/review' element={<ChefReviews/>}/>
+          <Route path="/chat" element={ <Chat/>}/>
+
         </Routes>
       </Router>
     </div>
