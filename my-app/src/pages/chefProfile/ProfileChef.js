@@ -227,7 +227,8 @@ export const ProfileChef = () => {
             shortDescription: "",
             description: "",
             category: "",
-            imageurl: ""
+            imageurl: "",
+            chefid: chefData?.id
           })
           }
           )
