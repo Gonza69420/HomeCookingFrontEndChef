@@ -158,9 +158,6 @@ export const ProfileChef = () => {
             setImageUpload(null);
             getURL(imageRef, "menu");
 
-        }
-        ).then(()=> {
-            handleSaveButtonMenu();
         }).catch(err => {
             console.log(err);
         }
@@ -178,9 +175,7 @@ export const ProfileChef = () => {
             getURL(imageRef, "restaurant");
 
         }
-        ).then(() => {
-            handleSaveButtonRestaurant();
-        }).catch(err => {
+        ).catch(err => {
             console.log(err);
         }
         );
@@ -390,7 +385,7 @@ export const ProfileChef = () => {
                             <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                                 <div className="centerItems">
                                 <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonRestaurant}>Cancel</Button>
-                                <Button className="successbutton"variant="success" onClick={uploadImageRestaurant(restaurantAdd.name)}>Save</Button>
+                                <Button className="successbutton"variant="success" onClick={handleSaveButtonRestaurant}>Save</Button>
                                 </div>
                             </Stack>
                         </Popup>
@@ -482,7 +477,7 @@ export const ProfileChef = () => {
                                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                                 <div className="centerItems">
                                 <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonMenu}>Cancel</Button>
-                                <Button className="successbutton"variant="success" onClick={uploadImageMenu(menu.name)}>Save</Button>
+                                <Button className="successbutton"variant="success" onClick={handleSaveButtonMenu}>Save</Button>
                                 </div>
                             </Stack>
                             </Popup>
