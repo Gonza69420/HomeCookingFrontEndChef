@@ -193,8 +193,8 @@ export const ProfileChef = () => {
                 });
     }
 
-    const handleSaveButtonMenu = async () => {
-        await uploadImageMenu(menu.name);
+    const handleSaveButtonMenu =  () => {
+        uploadImageMenu(menu.name).then(() => {
         console.log(menu);
         
         var myHeaders = new Headers();
@@ -232,7 +232,10 @@ export const ProfileChef = () => {
           }
           )
           .catch(error => console.log('error', error));
-
+        }).catch(err => {
+            console.log(err);
+        }
+        );
     }
 
  
@@ -248,7 +251,7 @@ export const ProfileChef = () => {
     }
 
     const handleSaveButtonRestaurant = async () => {
-        uploadImageRestaurant(restaurantAdd.name);
+        uploadImageRestaurant(restaurantAdd.name).then(() => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -279,7 +282,9 @@ export const ProfileChef = () => {
         .catch(error => console.log('error', error));
 
         setRestaurantPopUp(false);
-        
+    }).catch(err => {
+        console.log(err);
+    });
     }
 
 
