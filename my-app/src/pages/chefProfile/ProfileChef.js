@@ -194,7 +194,7 @@ export const ProfileChef = () => {
     }
 
     const handleSaveButtonMenu =  () => {
-        uploadImageMenu(menu.name).then(() => {
+        uploadImageMenu(menu.name)
         console.log(menu);
         
         var myHeaders = new Headers();
@@ -204,7 +204,7 @@ export const ProfileChef = () => {
             name : menu.name,
             shortDescription : menu.shortDescription,
             description : menu.description,
-            imageurl : menu.imageurl,
+            imageurl : menu?.imageurl,
             category: menu.category
         });
         
@@ -233,10 +233,7 @@ export const ProfileChef = () => {
           }
           )
           .catch(error => console.log('error', error));
-        }).catch(err => {
-            console.log(err);
-        }
-        );
+       
     }
 
  
