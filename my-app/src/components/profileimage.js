@@ -55,7 +55,7 @@ export const Profileimage = props => {
 
 
     const getURL = (imageRef) => {
-        
+        console.log(imageRef);
         getDownloadURL(imageRef)
         .then((url) => {
           setImage(url);

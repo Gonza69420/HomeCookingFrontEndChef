@@ -19,6 +19,11 @@ export  const MainPage = () => {
     }, [])
 
     useEffect(() => {
+      
+
+    }, [])
+
+    useEffect(() => {
       var raw = "";
 
       var requestOptions = {
