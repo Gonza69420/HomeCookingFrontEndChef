@@ -84,7 +84,6 @@ export const ProfileChef = () => {
         fetch("http://localhost:8080/api/auth/getChefProfile/" + sessionStorage.getItem("mail"), requestOptions)
         .then(response => response.json())
         .then(result  => {
-            console.log(result)
             setChefData(result);
             console.log(result.id)
             setIdChef(result.id);
@@ -381,6 +380,11 @@ export const ProfileChef = () => {
 
     const handleUploadMenu = (e) => {
         setUploadMenu(true);
+    }
+
+    const handleSaveButtonRestaurant = () => {
+
+
     }
 
     return (
