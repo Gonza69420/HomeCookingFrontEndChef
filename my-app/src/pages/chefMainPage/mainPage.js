@@ -113,7 +113,7 @@ export  const MainPage = () => {
           <div className='container mt-5'>
           <Stack direction="horizontal" className='justify-content-startmt-2' gap={3}>
             <div className="containerTittles">
-              <h1 className='Tittles'>Welcome !</h1> 
+              <h1 className='Tittles'>Welcome {chefData?.chefProfile?.firstName} {chefData?.chefProfile?.lastName}!</h1> 
             </div>
               <button type="button" onClick={handleClic} className={buscar ? "btn btn-success btn-lg" : "btn btn-danger btn-lg"}>
                 {botonToggle()()}

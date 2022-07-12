@@ -156,8 +156,12 @@ export const ProfileChef = () => {
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);
+            getURL(imageRef, "menu");
+
         }
-        ).catch(err => {
+        ).then(()=> {
+            handleSaveButtonMenu();
+        }).catch(err => {
             console.log(err);
         }
         );
@@ -171,8 +175,12 @@ export const ProfileChef = () => {
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);
+            getURL(imageRef, "restaurant");
+
         }
-        ).catch(err => {
+        ).then(() => {
+            handleSaveButtonRestaurant();
+        }).catch(err => {
             console.log(err);
         }
         );
@@ -191,10 +199,6 @@ export const ProfileChef = () => {
     }
 
     const handleSaveButtonMenu = () => {
-        uploadImageMenu(menu.name);
-        const imageRef = ref(storage , "images/chef/menu/" + sessionStorage.getItem("mail") + "/" + menu.name);
-        getURL(imageRef, "menu");
-
         console.log(menu);
 
         var myHeaders = new Headers();
@@ -248,10 +252,6 @@ export const ProfileChef = () => {
     }
 
     const handleSaveButtonRestaurant = () => {
-        uploadImageRestaurant(restaurantAdd.name);
-        const imageRef = ref(storage , "images/chef/restaurant/" + sessionStorage.getItem("mail") + "/" + restaurantAdd.name);
-        getURL(imageRef, "restaurant");
-
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -390,7 +390,7 @@ export const ProfileChef = () => {
                             <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                                 <div className="centerItems">
                                 <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonRestaurant}>Cancel</Button>
-                                <Button className="successbutton"variant="success" onClick={handleSaveButtonRestaurant}>Save</Button>
+                                <Button className="successbutton"variant="success" onClick={uploadImageRestaurant(restaurantAdd.name)}>Save</Button>
                                 </div>
                             </Stack>
                         </Popup>
@@ -482,7 +482,7 @@ export const ProfileChef = () => {
                                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                                 <div className="centerItems">
                                 <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonMenu}>Cancel</Button>
-                                <Button className="successbutton"variant="success" onClick={handleSaveButtonMenu}>Save</Button>
+                                <Button className="successbutton"variant="success" onClick={uploadImageMenu(menu.name)}>Save</Button>
                                 </div>
                             </Stack>
                             </Popup>
