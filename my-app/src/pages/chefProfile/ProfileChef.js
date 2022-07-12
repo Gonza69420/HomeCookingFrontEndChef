@@ -13,6 +13,8 @@ import { ReviewCard } from '../../components/reviewCard';
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 export const ProfileChef = () => {
+    const [uploadMenu , setUploadMenu] = useState(false);
+    const [uploadRestaurant , setUploadRestaurant] = useState(false);
     const [dataMenu, setDataMenu] = useState([{}]);
     const [isDataMenuEmpty , setisDataMenuEmpty] = useState(false);
     const [personalizar , setPersonalizar] = useState(false);
@@ -143,12 +145,18 @@ export const ProfileChef = () => {
 
 
 
-    const getURL = (imageRef) => {
+    const getURL = (imageRef, what) => {
         
         getDownloadURL(imageRef)
         .then((url) => {
-            console.log(url);
-            setImageUrl(url);
+            if(what === "restaurant"){
+            restaurantAdd.imageurl = url;
+            }else if(what === "menu"){
+            setMenu({
+                ...menu,
+                imageurl: url
+            })
+            }
         })
         .catch((error) => {
           // A full list of error codes is available at
@@ -181,9 +189,10 @@ export const ProfileChef = () => {
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);
-            getURL(imageRef);
+            getURL(imageRef, "menu");
         }).catch(err => {
             console.log(err);
+
         }
         );
     }
@@ -196,7 +205,7 @@ export const ProfileChef = () => {
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);
-
+            getURL(imageRef, "restaurant");
         }
         ).catch(err => {
             console.log(err);
@@ -216,11 +225,19 @@ export const ProfileChef = () => {
                 });
     }
 
-    const handleSaveButtonMenu =  () => {
-        const imageRef = ref(storage , "images/chef/menu/" + sessionStorage.getItem("mail") + "/" + menu.name);
+    useEffect (() => {
+        if(menu.name === ""  || uploadMenu === false ){
+            console.log("no se puede subir");
+            return;
+        }
+
         uploadImageMenu(menu.name)
         console.log(menu);
-        
+        if( menu.imageurl === ""){
+            console.log("no cargo imagen");
+            return;
+        }
+        console.log(menu.imageurl);
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         
@@ -228,7 +245,7 @@ export const ProfileChef = () => {
             name : menu.name,
             shortDescription : menu.shortDescription,
             description : menu.description,
-            imageurl : imageurl,
+            imageurl : menu.imageurl,
             category: menu.category,
             chefid: chefData.id
         });
@@ -242,30 +259,84 @@ export const ProfileChef = () => {
           body: raw,
           redirect: 'follow'
         };
+        console.log(raw);
         //kjnkjnkj
         fetch("http://localhost:8080/dbInfo/NewMenu/" + sessionStorage.getItem("mail"), requestOptions)
           .then(response => {
-            response.text()
+            console.log("subiendo");
+            response.text();
         })
           .then(result => {
-            console.log(result)
-            setMenu({
+            console.log(JSON.parse(result));
+            returnValues();
+          }
+          )
+          .catch(error => console.log('error', error));
+       
+    }, [menu.imageurl, menu.name, uploadMenu])
+
+ 
+    //RESTAURANTE
+    useEffect (() => {
+        if(restaurantAdd.name === ""  || uploadRestaurant === false ){
+            console.log("no se puede subir");
+            return;
+        }
+
+        uploadImageRestaurant(restaurantAdd.name)
+        console.log(restaurantAdd);
+        if( restaurantAdd.imageurl === ""){
+            console.log("no cargo imagen");
+            return;
+        }
+        console.log(restaurantAdd.imageurl);
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        
+        var raw = JSON.stringify({
+            name : menu.name,
+            imageURL : menu.imageurl,
+            chefid: chefData.id
+        });
+        
+        var requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            mode: 'no-cors'
+          },
+          body: raw,
+          redirect: 'follow'
+        };
+        console.log(raw);
+        //kjnkjnkj
+        fetch("http://localhost:8080/dbInfo/NewMenu/" + sessionStorage.getItem("mail"), requestOptions)
+          .then(response => {
+            console.log("subiendo");
+            response.text();
+        })
+          .then(result => {
+            console.log(JSON.parse(result));
+            returnValues();
+          }
+          )
+          .catch(error => console.log('error', error));
+       
+    }, [restaurantAdd.name , uploadRestaurant])
+
+
+    const returnValues = () => {
+        setMenu({
             name: "",
             shortDescription: "",
             description: "",
             category: "",
             imageurl: ""
           })
+          setUploadMenu(false);
           setImageUrl('');
-          }
-          )
-          .catch(error => console.log('error', error));
-       
+
     }
-
- 
-
-
 
     const handleCancelButtonRestaurant = () => {
         setRestaurantPopUp(false);
@@ -275,47 +346,7 @@ export const ProfileChef = () => {
         });
     }
 
-    const handleSaveButtonRestaurant = async () => {
-        const imageRef = ref(storage , "images/chef/restaurant/" + sessionStorage.getItem("mail") + "/" + restaurantAdd.name);
-        uploadImageRestaurant(restaurantAdd.name).then(() => {
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        var raw = JSON.stringify({
-        name: restaurantAdd.name,
-        imageURL: restaurantAdd.imageurl,
-        ChefProfile: {}
-        });
-
-        var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-        };
-
-        fetch("http://localhost:8080/dbInfo/CreateRestaurant/" + sessionStorage.getItem("mail"), requestOptions)
-        .then(response => {
-            response.text()
-            getURL(imageRef, "restaurant")
-
-        })
-        .then(result => {
-            console.log(result)
-            setRestaurantAdd({
-                name: "",
-                imageurl : ""
-            })
-           // window.location.reload(false);
-
-        })
-        .catch(error => console.log('error', error));
-
-        setRestaurantPopUp(false);
-    }).catch(err => {
-        console.log(err);
-    });
-    }
+  
 
 
     const handleChangeBio = (e)=>{
@@ -345,6 +376,11 @@ export const ProfileChef = () => {
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
+    }
+
+
+    const handleUploadMenu = (e) => {
+        setUploadMenu(true);
     }
 
     return (
@@ -436,7 +472,8 @@ export const ProfileChef = () => {
                 <h2 className='d-flex justify-content-start mt-4 mb-4'> Menus</h2>
                 
                 
-                
+                <div className='containercards'>
+
                 <Stack direction="horizontal" className='mt-4' gap={3}>
                     
                     {isDataMenuEmpty && 
@@ -509,7 +546,7 @@ export const ProfileChef = () => {
                                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                                 <div className="centerItems">
                                 <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonMenu}>Cancel</Button>
-                                <Button className="successbutton"variant="success" onClick={handleSaveButtonMenu}>Save</Button>
+                                <Button className="successbutton"variant="success" onClick={handleUploadMenu}>Save</Button>
                                 </div>
                             </Stack>
                             </Popup>
@@ -518,6 +555,7 @@ export const ProfileChef = () => {
                     </div>
                     }
                 </Stack>
+                </div>
                 <br/>
             </div>
             <br/>
