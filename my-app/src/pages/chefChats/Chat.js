@@ -14,7 +14,7 @@ export const Chat = () => {
     })
 
     useEffect(() => {
-        let Sock = new SockJS('http://localhost:8080/ws', null, {transports: ['xhr-streaming'], headers: {'Authorization': 'Basic ' + btoa(username + ":" + password)}});
+        let Sock = new SockJS('http://localhost:8080/ws' );
         stompClient = over(Sock);
         stompClient.connect({}, onConnected, onError);
     }, [])

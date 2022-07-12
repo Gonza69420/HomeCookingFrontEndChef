@@ -148,7 +148,7 @@ export const ProfileChef = () => {
         });
     }
 
-    const uploadImageMenu = (menuName) => {
+    const uploadImageMenu =  (menuName) => {
         console.log(sessionStorage.getItem("mail"));
         if(imageUpload === null) return;
         console.log("image is not null");
@@ -164,7 +164,7 @@ export const ProfileChef = () => {
         );
     }
 
-    const uploadImageRestaurant = (RestaurantName) => {
+    const uploadImageRestaurant =  (RestaurantName) => {
         console.log(sessionStorage.getItem("mail"));
         if(imageUpload === null) return;
         console.log("image is not null");
@@ -193,9 +193,10 @@ export const ProfileChef = () => {
                 });
     }
 
-    const handleSaveButtonMenu = () => {
+    const handleSaveButtonMenu = async () => {
+        await uploadImageMenu(menu.name);
         console.log(menu);
-
+        
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         
@@ -246,7 +247,8 @@ export const ProfileChef = () => {
         });
     }
 
-    const handleSaveButtonRestaurant = () => {
+    const handleSaveButtonRestaurant = async () => {
+        uploadImageRestaurant(restaurantAdd.name);
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
