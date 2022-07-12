@@ -25,7 +25,6 @@ export const ProfileChef = () => {
         imageurl : ""
     });
     const [chefData , setChefData] = useState({
-        id : "",
         firstName: '',
         lastName: '',
         mail: '',
@@ -156,7 +155,6 @@ export const ProfileChef = () => {
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);
-            getURL(imageRef, "menu");
 
         }).catch(err => {
             console.log(err);
@@ -172,7 +170,6 @@ export const ProfileChef = () => {
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
             setImageUpload(null);
-            getURL(imageRef, "restaurant");
 
         }
         ).catch(err => {
@@ -205,7 +202,8 @@ export const ProfileChef = () => {
             shortDescription : menu.shortDescription,
             description : menu.description,
             imageurl : menu?.imageurl,
-            category: menu.category
+            category: menu.category,
+            chefid: chefData.id
         });
         
         var requestOptions = {
@@ -219,7 +217,10 @@ export const ProfileChef = () => {
         };
         
         fetch("http://localhost:8080/dbInfo/NewMenu/" + sessionStorage.getItem("mail"), requestOptions)
-          .then(response => response.text())
+          .then(response => {
+            response.text()
+            getURL(imageRef, "menu");
+        })
           .then(result => {
             console.log(result)
             setMenu({
@@ -227,8 +228,7 @@ export const ProfileChef = () => {
             shortDescription: "",
             description: "",
             category: "",
-            imageurl: "",
-            chefid: chefData?.id
+            imageurl: ""
           })
           }
           )
@@ -267,7 +267,11 @@ export const ProfileChef = () => {
         };
 
         fetch("http://localhost:8080/dbInfo/CreateRestaurant/" + sessionStorage.getItem("mail"), requestOptions)
-        .then(response => response.text())
+        .then(response => {
+            response.text()
+            getURL(imageRef, "restaurant")
+
+        })
         .then(result => {
             console.log(result)
             setRestaurantAdd({
