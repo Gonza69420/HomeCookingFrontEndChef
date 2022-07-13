@@ -5,6 +5,7 @@ import { ref , uploadBytes, getDownloadURL} from "firebase/storage";
 export const Profileimage = props => {
     const [personalizar , setPersonalizar] = useState(!props.personalizar);
     const [imageUpload , setImageUpload] = useState(null);
+    const [imageRef , setImageRef] = useState("");
     const [image , setImage] = useState("");
 
     const uploadImage = () => {
@@ -14,8 +15,7 @@ export const Profileimage = props => {
         const imageRef = ref(storage , "images/chef/" + sessionStorage.getItem("mail"));
         uploadBytes(imageRef , imageUpload).then(() => {
             console.log("Uploaded");
-            setImageUpload(null);
-            setChefImage(imageRef);
+            setImageRef(imageRef);
         }
         ).catch(err => {
             console.log(err);
@@ -24,7 +24,10 @@ export const Profileimage = props => {
 
     }
 
-    const setChefImage = (imageRef) => {
+    useEffect(() => {
+        if(imageUpload === null) return;
+        uploadImage();
+        if(imageRef === "") return;
         getURL(imageRef)
         console.log(image)
         if(image === "") return;
@@ -45,13 +48,15 @@ export const Profileimage = props => {
         fetch("http://localhost:8080/api/auth/editChefImage/" + sessionStorage.getItem("mail"), requestOptions)
         .then(response => response.text())
         .then(result => {
+            setImageUpload(null);
             console.log(result)
-            window.location.reload(false);
+            window.location.reload();
 
         }
         )
         .catch(error => console.log('error', error));
-    }
+
+    }, [image , imageRef, imageUpload])
 
 
     const getURL = (imageRef) => {
@@ -93,7 +98,6 @@ export const Profileimage = props => {
             <div className="personalizeimage">
                 <input type="file" className="inputCoso" id="imgupload" onChange={(event) => {
                     setImageUpload(event.target.files[0]);
-                    uploadImage();
                    
                    
                     } } />

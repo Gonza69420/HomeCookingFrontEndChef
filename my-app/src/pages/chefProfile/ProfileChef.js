@@ -11,6 +11,7 @@ import { Popup } from '../../components/Popup/Popup';
 import "./ProfileChef.css"
 import { ReviewCard } from '../../components/reviewCard';
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { BsDashSquareDotted } from 'react-icons/bs';
 
 export const ProfileChef = () => {
     const [uploadMenu , setUploadMenu] = useState(false);
@@ -64,6 +65,10 @@ export const ProfileChef = () => {
     });
 
     const[idchef , setIdChef] = useState('');
+
+    const [restaurantData, setRestaurantData] = useState([{}]);
+
+    const [isRestaurantDataEmpty, setRestaurantDataEmpty] = useState(false);
 
     useEffect(() => {
         if(sessionStorage.getItem('token') === null){
@@ -120,6 +125,30 @@ export const ProfileChef = () => {
     }, [idchef]);
 
 
+    useEffect (() => {
+        console.log(idchef);
+        var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+        };
+
+        fetch("http://localhost:8080/dbInfo/getRestaurant/" + sessionStorage.getItem('mail'), requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(JSON.parse(result));
+            
+            restaurantData[0]= (JSON.parse(result));
+            
+            console.log(dataMenu)
+            if(dataMenu[0][0].name !== undefined){
+                setRestaurantDataEmpty(true);
+            }
+        }
+        )
+        .catch(error => console.log('error', error));
+    }, [idchef]);
+
+
 
     
 
@@ -149,7 +178,10 @@ export const ProfileChef = () => {
         getDownloadURL(imageRef)
         .then((url) => {
             if(what === "restaurant"){
-            restaurantAdd.imageurl = url;
+                setRestaurantAdd({
+                    ...restaurantAdd,
+                    imageurl: url
+                })
             }else if(what === "menu"){
             setMenu({
                 ...menu,
@@ -267,8 +299,8 @@ export const ProfileChef = () => {
         })
           .then(result => {
             console.log(JSON.parse(result));
-            returnValues();
-          }
+            window.location.reload(false);
+        }
           )
           .catch(error => console.log('error', error));
        
@@ -293,9 +325,9 @@ export const ProfileChef = () => {
         myHeaders.append("Content-Type", "application/json");
         
         var raw = JSON.stringify({
-            name : menu.name,
-            imageURL : menu.imageurl,
-            chefid: chefData.id
+            name : restaurantAdd.name,
+            imageURL : restaurantAdd.imageurl,
+            chefId: chefData.id
         });
         
         var requestOptions = {
@@ -309,33 +341,23 @@ export const ProfileChef = () => {
         };
         console.log(raw);
         //kjnkjnkj
-        fetch("http://localhost:8080/dbInfo/NewMenu/" + sessionStorage.getItem("mail"), requestOptions)
+        fetch("http://localhost:8080/dbInfo/CreateRestaurant/" + sessionStorage.getItem("mail"), requestOptions)
           .then(response => {
             console.log("subiendo");
             response.text();
         })
           .then(result => {
             console.log(JSON.parse(result));
-            returnValues();
-          }
+            window.location.reload(false);
+        }
           )
           .catch(error => console.log('error', error));
        
-    }, [restaurantAdd.name , uploadRestaurant])
+    }, [restaurantAdd.name , uploadRestaurant, restaurantAdd.imageurl])
 
+   
 
-    const returnValues = () => {
-        setMenu({
-            name: "",
-            shortDescription: "",
-            description: "",
-            category: "",
-            imageurl: ""
-          })
-          setUploadMenu(false);
-          setImageUrl('');
-
-    }
+    
 
     const handleCancelButtonRestaurant = () => {
         setRestaurantPopUp(false);
@@ -356,7 +378,7 @@ export const ProfileChef = () => {
     }
 
     const handleSaveBio = () => {
-        console.log(bio);
+        console.log(chefData.bio);
         var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
 
@@ -365,7 +387,7 @@ export const ProfileChef = () => {
             method: 'POST',
             headers: myHeaders,
             body: JSON.stringify({
-                bio: bio,
+                bio: chefData.bio,
                 imageurl: ""
                 }),
             redirect: 'follow'
@@ -373,7 +395,11 @@ export const ProfileChef = () => {
 
             fetch("http://localhost:8080/api/auth/editChefBio/" + sessionStorage.getItem("mail"), requestOptions)
             .then(response => response.text())
-            .then(result => console.log(result))
+            .then(result => {
+                console.log(result)
+                window.location.reload(false);
+            }
+            )
             .catch(error => console.log('error', error));
     }
 
@@ -383,6 +409,8 @@ export const ProfileChef = () => {
     }
 
     const handleSaveButtonRestaurant = () => {
+        setUploadRestaurant(true);
+        window.location.reload(false);
 
 
     }
@@ -430,12 +458,15 @@ export const ProfileChef = () => {
 
                 <h2 className='d-flex justify-content-start mt-4 mb-4'> Restaurantes</h2>
                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
-
-                    {chefData.restaurant.map((restaurant, index) => {
+                {isRestaurantDataEmpty &&
+                <>
+                    {restaurantData[0]?.map((restaurant, index) => {
                         return (
                         <RestaurantCard url={restaurant.imageURL} name={restaurant.name}  />
                         )
                     })}
+                </>
+                }
                     {personalizar &&
                     <div>
                     <AnadirCard onClick={() => setRestaurantPopUp(true)}/>
@@ -482,34 +513,17 @@ export const ProfileChef = () => {
                     
                     {isDataMenuEmpty && 
                     <>
+                    {!personalizar &&
+                    <>
                     {dataMenu[0]?.map((menu, index) => {
                         return (
-                            <div>
-                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.shortDescription} onClick={() => setmenuPopUp(true)} />
-
-                            {menuPopUp &&
-                                <>
-                                    <Popup setTrigger={setmenuPopUp} trigger={menuPopUp} type="popup-inner">
-                                    <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
-                                    <h1 className="topright">{menu.name}</h1>
-                                    <img className ="MenuImage" src={menu.imageurl}/>
-                                    </Stack>
-                                    <h3 className='d-flex justify-content-start mt-4 mb-4'>Descripcion:</h3>
-                                    <p className='totheright'>{menu.description}</p>
-                                    <br/>
-            
-
-        
-            
-                                    <h3 className='d-flex justify-content-start mt-4 mb-4'>Reviews:</h3>
-                                    <ReviewCard firstname="Raul" lastname="Salvio" review="Interesante el concepto. Mercado Libre es una herramienta" src="https://pbs.twimg.com/media/BcFrAwtIYAAsqsE.jpg" stars={3}/>
-            
-                                    </Popup>
-                                </>
-                                }
-                            </div>
+                            <>
+                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.shortDescription} menuid={menu.id} eliminar={personalizar} />
+                            </>
                         )
                     })}
+                    </>
+                    }
                     </>
                     }
 
@@ -518,7 +532,16 @@ export const ProfileChef = () => {
                     
 
                     {personalizar &&
-                    <div>
+                    <>
+                        {dataMenu[0]?.map((menu, index) => {
+                        return (
+                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.shortDescription} menuid={menu.id} eliminar={personalizar}  />
+                        )
+                    })}
+
+
+
+
                     <AnadirCard onClick={() => setmenuPopUpAdd(true)}/>
                     {menuPopUpAdd && 
                         <>
@@ -556,8 +579,10 @@ export const ProfileChef = () => {
                             </Popup>
                         </>
                         }
-                    </div>
+                        
+                    </>
                     }
+
                 </Stack>
                 </div>
                 <br/>

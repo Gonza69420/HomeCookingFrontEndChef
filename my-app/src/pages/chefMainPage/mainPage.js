@@ -57,6 +57,10 @@ export  const MainPage = () => {
       console.log(error);
     })
     },[]);
+
+    useEffect(() => {
+      
+    }, []);
     
     const handleClic = () => {
       setBuscar(!buscar);

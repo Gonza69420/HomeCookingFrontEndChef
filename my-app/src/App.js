@@ -7,6 +7,7 @@ import { MainPage } from './pages/chefMainPage/mainPage';
 import { ProfileChef } from './pages/chefProfile/ProfileChef';
 import { ChefReviews } from './pages/chefReviews/ChefReviews';
 import { Chat } from './pages/chefChats/Chat';
+import { Solicitud } from './pages/Solicitud/solicitud';
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
           <Route path='/profile' element={<ProfileChef/>}/>
           <Route path='/review' element={<ChefReviews/>}/>
           <Route path="/chat" element={ <Chat/>}/>
-
+          <Route path='/solicitud' element={<Solicitud/>}/>
         </Routes>
       </Router>
     </div>

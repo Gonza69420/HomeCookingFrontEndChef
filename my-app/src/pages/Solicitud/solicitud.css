@@ -1,0 +1,19 @@
+.containerTittles{
+    margin-left: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.containerTittles .Tittles{
+    text-align: left;
+    padding: 10px;
+    background-color: rgb(238, 142, 64);
+    width: fit-content;
+    color: white;
+}
+
+.container.mt-5.bg-white .containerForm .movetotheright{
+    margin-left: auto;
+    margin-right: 0;
+    width: 100px;
+}

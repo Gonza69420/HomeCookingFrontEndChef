@@ -23,6 +23,12 @@ export const MenuItems= [
     },
     {
         id: 4,
+        title:"Solicitud",
+        url: "/solicitud",
+        cName: "nav-link"
+    },
+    {
+        id: 5,
         title:"Chats",
         url: "/chat",
         cName: "nav-link"
