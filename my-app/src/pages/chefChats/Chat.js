@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import "./Chat.css";
+import Navbar from '../../components/Navbar';
+
 
 var stompClient =null;
 export const Chat = () => {
@@ -14,6 +16,8 @@ export const Chat = () => {
         connected: false,
         message: ''
       });
+
+      const [chefData, setChefData] = useState({});
     useEffect(() => {
       console.log(userData);
     }, [userData]);
@@ -27,7 +31,7 @@ export const Chat = () => {
     const onConnected = () => {
         setUserData({...userData,"connected": true});
         stompClient.subscribe('/chatroom/public', onMessageReceived);
-        stompClient.subscribe('/user/'+userData.username+'/private', onPrivateMessage);
+        stompClient.subscribe('/user/'+ sessionStorage.getItem("mail")+'/private', onPrivateMessage);
         userJoin();
     }
 
@@ -74,6 +78,27 @@ export const Chat = () => {
         
     }
 
+    useEffect(() => {
+        var raw = "";
+
+    var requestOptions = {
+  method: 'GET',
+  
+    redirect: 'follow'
+    };
+
+    fetch("http://localhost:8080/api/auth/getChefProfile/"+ sessionStorage.getItem("mail"), requestOptions)
+    .then(response => response.text())
+    .then(result => {
+        console.log(result)
+        setChefData(JSON.parse(result));
+    })
+    .catch(error => console.log('error', error));
+    console.log(userData.username);
+    }, []);
+
+
+
     const handleMessage =(event)=>{
         const {value}=event.target;
         setUserData({...userData,"message": value});
@@ -118,12 +143,14 @@ export const Chat = () => {
         connect();
     }
     return (
+       <> <Navbar/>
     <div className="container">
+        
         {userData.connected?
         <div className="chat-box">
             <div className="member-list">
                 <ul>
-                    <li onClick={()=>{setTab("CHATROOM")}} className={`member ${tab==="CHATROOM" && "active"}`}>Chatroom</li>
+
                     {[...privateChats.keys()].map((name,index)=>(
                         <li onClick={()=>{setTab(name)}} className={`member ${tab===name && "active"}`} key={index}>{name}</li>
                     ))}
@@ -142,7 +169,7 @@ export const Chat = () => {
 
                 <div className="send-message">
                     <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} /> 
-                    <button type="button" className="send-button" onClick={sendValue}>send</button>
+                    <button type="button" className="send-button" onClick={sendValue}>Send</button>
                 </div>
             </div>}
             {tab!=="CHATROOM" && <div className="chat-content">
@@ -177,7 +204,7 @@ export const Chat = () => {
               </button> 
         </div>}
     </div>
-    )
+    </>)
 }
 
 export default Chat

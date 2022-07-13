@@ -60,6 +60,8 @@ export  const MainPage = () => {
 
     useEffect(() => {
       
+
+
     }, []);
     
     const handleClic = () => {
@@ -70,6 +72,9 @@ export  const MainPage = () => {
         setNoBuscarChef();
       }
     }
+
+
+
 
 
 
@@ -114,6 +119,9 @@ export  const MainPage = () => {
               }
             }
     }
+
+
+
     
     return(
         <div>

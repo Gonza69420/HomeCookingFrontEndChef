@@ -51,8 +51,6 @@ export const ProfileChef = () => {
         bio: ''
        });
 
-    const [bio , setBio] = useState('');
-
     const storage = getStorage();
 
 
@@ -139,8 +137,8 @@ export const ProfileChef = () => {
             
             restaurantData[0]= (JSON.parse(result));
             
-            console.log(dataMenu)
-            if(dataMenu[0][0].name !== undefined){
+            console.log(restaurantAdd)
+            if(restaurantAdd[0][0].name !== undefined){
                 setRestaurantDataEmpty(true);
             }
         }
@@ -457,6 +455,8 @@ export const ProfileChef = () => {
                 }
 
                 <h2 className='d-flex justify-content-start mt-4 mb-4'> Restaurantes</h2>
+                <div className='containercards'>
+
                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                 {isRestaurantDataEmpty &&
                 <>
@@ -504,6 +504,7 @@ export const ProfileChef = () => {
                     }
                     
                 </Stack>
+                </div>
                 <h2 className='d-flex justify-content-start mt-4 mb-4'> Menus</h2>
                 
                 
