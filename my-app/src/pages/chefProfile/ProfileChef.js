@@ -408,7 +408,7 @@ export const ProfileChef = () => {
 
     const handleSaveButtonRestaurant = () => {
         setUploadRestaurant(true);
-        window.location.reload(false);
+     
 
 
     }
