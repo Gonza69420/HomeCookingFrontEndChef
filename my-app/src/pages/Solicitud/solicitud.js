@@ -7,11 +7,11 @@ export const Solicitud = () => {
         mail: '',
         menu: '',
         localizacion: '',
-        dia: '',
-        mes: '',
-        anio: '',
-        horas: '',
-        minutos: '',
+        dia: '1',
+        mes: '1',
+        anio: '2022',
+        horas: '1',
+        minutos: '1',
         monto: ''
     })
 

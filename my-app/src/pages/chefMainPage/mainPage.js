@@ -202,7 +202,7 @@ export  const MainPage = () => {
                 <>
                 {solicitudes[0].map((solicitud) => {
                   return(
-                      <PedidosCard eliminable={false} name={solicitud.fullNameClient} Menu={solicitud.menu} Fecha={solicitud.date} Localizacion={solicitud.hour} Monto={solicitud.price} url={solicitud.clientPhoto} hora= {solicitud.hour} id={solicitud.id} />
+                      <PedidosCard eliminable={false} name={solicitud.fullNameClient} Menu={solicitud.menuName} Fecha={solicitud.date} Localizacion={solicitud.hour} Monto={solicitud.price} url={solicitud.clientPhoto} hora= {solicitud.hour} id={solicitud.id} />
                   )
                 })}
                 </>
@@ -217,7 +217,7 @@ export  const MainPage = () => {
               <>
               {solicitudesPasadas[0].map((solicitud) => {
                 return(
-                <PedidosCard name={solicitud.fullNameClient} Menu={solicitud.menu} Fecha={solicitud.date} Localizacion={solicitud.hour} Monto={solicitud.price} url={solicitud.clientPhoto} eliminable={true} hora= {solicitud.hour} id={solicitud.id} />
+                <PedidosCard name={solicitud.fullNameClient} Menu={solicitud.menuName} Fecha={solicitud.date} Localizacion={solicitud.hour} Monto={solicitud.price} url={solicitud.clientPhoto} eliminable={true} hora= {solicitud.hour} id={solicitud.id} />
                 )
               })}
               </>
