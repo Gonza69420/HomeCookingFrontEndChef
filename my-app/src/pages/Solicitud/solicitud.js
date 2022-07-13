@@ -52,7 +52,7 @@ export const Solicitud = () => {
         .then(response => response.text())
         .then(result => 
             {
-            console.log(result)
+            
             window.location.reload(false);
             }
             )

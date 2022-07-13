@@ -20,7 +20,6 @@ export const PedidosCard = props => {
         fetch("http://localhost:8080/solicitude/deleteSolicitude/" + pedidoID, requestOptions)
         .then(response => response.text())
         .then(result => {
-            console.log(result)
             window.location.reload(false);
         })
         .catch(error => console.log('error', error));

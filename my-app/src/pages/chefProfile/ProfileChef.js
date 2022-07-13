@@ -296,8 +296,7 @@ export const ProfileChef = () => {
             response.text();
         })
           .then(result => {
-            console.log(JSON.parse(result));
-            window.location.reload(false);
+            window.location.reload();
         }
           )
           .catch(error => console.log('error', error));
@@ -345,7 +344,6 @@ export const ProfileChef = () => {
             response.text();
         })
           .then(result => {
-            console.log(JSON.parse(result));
             window.location.reload(false);
         }
           )

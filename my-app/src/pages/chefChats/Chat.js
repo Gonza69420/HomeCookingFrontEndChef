@@ -25,7 +25,7 @@ export const Chat = () => {
     const onConnected = () => {
         setUserData({...userData,"connected": true});
         stompClient.subscribe('/chatroom/public', onMessageReceived);
-        stompClient.subscribe('/user/'+ sessionStorage.getItem('fullNameChef')+'/private', onPrivateMessage);
+        stompClient.subscribe('/user/'+ userData.username +'/private', onPrivateMessage);
         userJoin();
     }
 
