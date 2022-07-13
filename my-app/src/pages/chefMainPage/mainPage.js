@@ -9,6 +9,10 @@ export  const MainPage = () => {
   const [data , setData] = useState();
   const [buscar, setBuscar] = useState();
   const [chefData , setChefData] = useState({});
+  const [solicitudes, setSolicitudes] = useState([]);
+  const [isSolicitudesEmpty , setIsSolicitudesEmpty] = useState(false);
+  const [solicitudesPasadas, setSolicitudesPasadas] = useState([]);
+  const [isSolicitudesPasadasEmpty , setIsSolicitudesPasadasEmpty] = useState(false);
 
     useEffect(() => {
       console.log(sessionStorage.getItem('token'));
@@ -53,6 +57,8 @@ export  const MainPage = () => {
     .then(data => {
       console.log(data);
       setChefData(data);
+      sessionStorage.setItem('fullNameChef', data.fullNameChef);
+
     }).catch(error => {
       console.log(error);
     })
@@ -60,9 +66,62 @@ export  const MainPage = () => {
 
     useEffect(() => {
       
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      
+      var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+      
+      fetch("http://localhost:8080/solicitude/getPendingSolicitudesByChef/" + sessionStorage.getItem("mail"), requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          console.log(result)
+          solicitudes[0] = JSON.parse(result);
 
+          console.log(solicitudes[0]);
+
+          if(solicitudes[0][0].idclient != null){
+            setIsSolicitudesEmpty(true);
+          }
+
+      })
+        .catch(error => console.log('error', error));
 
     }, []);
+
+    useEffect(() => {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      
+
+      var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+      console.log("consiguiendo solicitudes")
+      fetch("http://localhost:8080/solicitude/getAcceptedSolicitudesByChef/" +  sessionStorage.getItem("mail"), requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          console.log("conseguido")
+          console.log(JSON.parse(result))
+          solicitudesPasadas[0] = JSON.parse(result);
+          
+          console.log(solicitudesPasadas[0]);
+          if(solicitudesPasadas[0][0].idclient != null){
+            setIsSolicitudesPasadasEmpty(true);
+          }
+
+
+        })
+        .catch(error => console.log('error', error));
+    }, [])
+
+
     
     const handleClic = () => {
       setBuscar(!buscar);
@@ -137,18 +196,35 @@ export  const MainPage = () => {
               </button>     
           </Stack>
           <h2 className='d-flex justify-content-start mt-4 mb-4'>Pedidos Pendientes</h2>
-          <Stack direction="horizontal" className='justify-content-start mt-2' gap={3}>
-          <PedidosCard name="Ricardo Luis" Menu="Milanesa con papas" Fecha="3/7/2022" Localizacion="San Fernando 3330" Monto="4000" url="https://www.cippec.org/wp-content/uploads/2020/11/foto-juan-camisassa-e1605808262604.jpg" />
-          </Stack>
+          <div className='containercards'>
+            <Stack direction="horizontal" className='justify-content-start mt-2' gap={3}>
+              {isSolicitudesEmpty &&
+                <>
+                {solicitudes[0].map((solicitud) => {
+                  return(
+                      <PedidosCard eliminable={false} name={solicitud.fullNameClient} Menu={solicitud.menu} Fecha={solicitud.date} Localizacion={solicitud.hour} Monto={solicitud.price} url={solicitud.clientPhoto} hora= {solicitud.hour} id={solicitud.id} />
+                  )
+                })}
+                </>
+              }
+            </Stack>
+          </div>
           <h2 className='d-flex justify-content-start mt-4 mb-4'>Pedidos Aceptados</h2>
-          <Stack direction="horizontal" className='justify-content-start mt-2' gap={3}>
-          <PedidosCard name="Jorge Mato" Menu="Ribs con barbacoa" Fecha="15/7/2022" Localizacion="Pilar Avenida s3" Monto="6301" url="https://www.eretailday.org/2020/miami/wp-content/uploads/2019/10/msa.jpg" />
-          </Stack>
-          <h2 className='d-flex justify-content-start mt-4 mb-4'>Pedidos Pasados</h2> 
-          <Stack direction="horizontal" className='justify-content-start mt-2 mb-4' gap={3}>
-          <PedidosCard name="Paolo Estevo" Menu="Sushi 30p de Salmon" Fecha="8/6/2022" Localizacion="Martinez Avenida Libertador 2049" Monto="8500" url="https://numax.org/storage/cache/images/d81/1621955604-750_ad141411-foto-pablo-seoane.jpg" />
-          <PedidosCard name="Malena Lampone" Menu="Ribs con barbacoa x2" Fecha="13/5/2022" Localizacion="Palermo Juan Maria Gutierrez 342" Monto="12602" url="https://contents.bebee.com/users/id/JJI2b6285fa7552760/_avatar-urbwC-400.png" />
-          </Stack>
+          <div className='containercards'>
+
+            <Stack direction="horizontal" className='justify-content-start mt-2' gap={3}>
+              {isSolicitudesPasadasEmpty &&
+              <>
+              {solicitudesPasadas[0].map((solicitud) => {
+                return(
+                <PedidosCard name={solicitud.fullNameClient} Menu={solicitud.menu} Fecha={solicitud.date} Localizacion={solicitud.hour} Monto={solicitud.price} url={solicitud.clientPhoto} eliminable={true} hora= {solicitud.hour} id={solicitud.id} />
+                )
+              })}
+              </>
+              }
+            </Stack>
+          </div>
+          
           </div>
         </div>
     )

@@ -3,24 +3,18 @@ import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import "./Chat.css";
 import Navbar from '../../components/Navbar';
-
-
 var stompClient =null;
 export const Chat = () => {
     const [privateChats, setPrivateChats] = useState(new Map());     
     const [publicChats, setPublicChats] = useState([]); 
     const [tab,setTab] =useState("CHATROOM");
     const [userData, setUserData] = useState({
-        username: '',
+        username: sessionStorage.getItem('fullNameChef'),
         receivername: '',
-        connected: false,
+        connected: true,
         message: ''
       });
-
-      const [chefData, setChefData] = useState({});
-    useEffect(() => {
-      console.log(userData);
-    }, [userData]);
+   
 
     const connect =()=>{
         let Sock = new SockJS('http://localhost:8080/ws');
@@ -31,7 +25,7 @@ export const Chat = () => {
     const onConnected = () => {
         setUserData({...userData,"connected": true});
         stompClient.subscribe('/chatroom/public', onMessageReceived);
-        stompClient.subscribe('/user/'+ sessionStorage.getItem("mail")+'/private', onPrivateMessage);
+        stompClient.subscribe('/user/'+ sessionStorage.getItem('fullNameChef')+'/private', onPrivateMessage);
         userJoin();
     }
 
@@ -58,6 +52,9 @@ export const Chat = () => {
                 break;
         }
     }
+    useEffect(() => {
+        connect();
+    }, []);
     
     const onPrivateMessage = (payload)=>{
         console.log(payload);
@@ -78,27 +75,6 @@ export const Chat = () => {
         
     }
 
-    useEffect(() => {
-        var raw = "";
-
-    var requestOptions = {
-  method: 'GET',
-  
-    redirect: 'follow'
-    };
-
-    fetch("http://localhost:8080/api/auth/getChefProfile/"+ sessionStorage.getItem("mail"), requestOptions)
-    .then(response => response.text())
-    .then(result => {
-        console.log(result)
-        setChefData(JSON.parse(result));
-    })
-    .catch(error => console.log('error', error));
-    console.log(userData.username);
-    }, []);
-
-
-
     const handleMessage =(event)=>{
         const {value}=event.target;
         setUserData({...userData,"message": value});
@@ -110,7 +86,7 @@ export const Chat = () => {
                 message: userData.message,
                 status:"MESSAGE"
               };
-              console.log(chatMessage);
+          
               stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
               setUserData({...userData,"message": ""});
             }
@@ -134,23 +110,13 @@ export const Chat = () => {
         }
     }
 
-    const handleUsername=(event)=>{
-        const {value}=event.target;
-        setUserData({...userData,"username": value});
-    }
-
-    const registerUser=()=>{
-        connect();
-    }
     return (
-       <> <Navbar/>
+        <> <Navbar/>
     <div className="container">
-        
-        {userData.connected?
+     
         <div className="chat-box">
             <div className="member-list">
                 <ul>
-
                     {[...privateChats.keys()].map((name,index)=>(
                         <li onClick={()=>{setTab(name)}} className={`member ${tab===name && "active"}`} key={index}>{name}</li>
                     ))}
@@ -169,7 +135,7 @@ export const Chat = () => {
 
                 <div className="send-message">
                     <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} /> 
-                    <button type="button" className="send-button" onClick={sendValue}>Send</button>
+                    <button type="button" className="send-button" onClick={sendValue}>send</button>
                 </div>
             </div>}
             {tab!=="CHATROOM" && <div className="chat-content">
@@ -189,20 +155,7 @@ export const Chat = () => {
                 </div>
             </div>}
         </div>
-        :
-        <div className="register">
-            <input
-                id="user-name"
-                placeholder="Enter your name"
-                name="userName"
-                value={userData.username}
-                onChange={handleUsername}
-                margin="normal"
-              />
-              <button type="button" onClick={registerUser}>
-                    connect
-              </button> 
-        </div>}
+       
     </div>
     </>)
 }

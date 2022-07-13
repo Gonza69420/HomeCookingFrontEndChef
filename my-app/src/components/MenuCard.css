@@ -38,6 +38,16 @@
     object-fit: cover;
 }
 
+.card .card-img-top-eliminable{
+    vertical-align:top;
+    display: flex;
+    align-items: flex-end;
+    height: 12rem;
+    width: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+}
+
 .card .card-tittle{
     padding: 1rem;
 }
@@ -48,15 +58,25 @@
 
 .cardRestaurant{
     overflow: hidden;
-    box-shadow: 0 2px 20px #979a9e;
+    box-shadow: 0 2px 20px #e1e5ee;
     border-radius: 0.2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     transition: transform 200m ease-in;
-    width: 300px;
+    max-width: 300px;
     height: 400px;
+    min-width: 300px;
    
+}
+
+.cardRestaurant .card-img-top{
+    vertical-align:top;
+    display: flex;
+    align-items: flex-end;
+    height: 12rem;
+    width: 100%;
+    object-fit: cover;
 }
 
 .cardRestaurant .card-body{
@@ -69,3 +89,30 @@
     align-items: center;
     font-size:xx-large;
 }
+
+.cardRestaurantEliminable{
+    overflow: hidden;
+    box-shadow: 0 2px 20px #e1e5ee;
+    border-radius: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 200m ease-in;
+    max-width: 300px;
+    height: 400px;
+    min-width: 300px;
+}
+
+.cardRestaurantEliminable .card-img-top-eliminable{
+    vertical-align:top;
+    display: flex;
+    align-items: flex-end;
+    height: 12rem;
+    width: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+}
+
+
+

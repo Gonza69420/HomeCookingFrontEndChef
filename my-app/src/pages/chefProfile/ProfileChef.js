@@ -137,8 +137,8 @@ export const ProfileChef = () => {
             
             restaurantData[0]= (JSON.parse(result));
             
-            console.log(restaurantAdd)
-            if(restaurantAdd[0][0].name !== undefined){
+            console.log(restaurantData)
+            if(restaurantData[0][0].name !== undefined){
                 setRestaurantDataEmpty(true);
             }
         }
@@ -458,16 +458,31 @@ export const ProfileChef = () => {
                 <div className='containercards'>
 
                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
-                {isRestaurantDataEmpty &&
+                {!personalizar &&
                 <>
-                    {restaurantData[0]?.map((restaurant, index) => {
-                        return (
-                        <RestaurantCard url={restaurant.imageURL} name={restaurant.name}  />
-                        )
-                    })}
-                </>
+                {isRestaurantDataEmpty &&
+                    <>
+                        {restaurantData[0]?.map((restaurant, index) => {
+                            return (
+                            <RestaurantCard url={restaurant.imageURL} name={restaurant.name} eliminable = {false} id={restaurant.id} />
+                            )
+                        })}
+                    </>
                 }
-                    {personalizar &&
+                </>
+            }
+
+                {personalizar &&
+                <>
+                    {isRestaurantDataEmpty &&
+                    <>
+                        {restaurantData[0]?.map((restaurant, index) => {
+                            return (
+                            <RestaurantCard url={restaurant.imageURL} name={restaurant.name} eliminable = {true} id={restaurant.id} />
+                            )
+                        })}
+                    </>
+                }
                     <div>
                     <AnadirCard onClick={() => setRestaurantPopUp(true)}/>
                     {restaurantPopUp && 
@@ -501,7 +516,8 @@ export const ProfileChef = () => {
                     }
                     
                     </div>
-                    }
+                    </>
+                }
                     
                 </Stack>
                 </div>

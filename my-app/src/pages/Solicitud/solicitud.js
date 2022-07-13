@@ -37,7 +37,8 @@ export const Solicitud = () => {
         date: data.dia + "/" + data.mes + "/" + data.anio,
         price: data.monto,
         hour: data.horas + ":" + data.minutos,
-        address: data.localizacion
+        address: data.localizacion,
+        menuName: data.menu
         });
 
         var requestOptions = {
@@ -50,7 +51,10 @@ export const Solicitud = () => {
         fetch("http://localhost:8080/solicitude/newSolicitude/", requestOptions)
         .then(response => response.text())
         .then(result => 
+            {
             console.log(result)
+            window.location.reload(false);
+            }
             )
         .catch(error => console.log('error', error));        
     }
