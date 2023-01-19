@@ -8,6 +8,7 @@ import { ProfileChef } from './pages/chefProfile/ProfileChef';
 import { ChefReviews } from './pages/chefReviews/ChefReviews';
 import { Chat } from './pages/chefChats/Chat';
 import { Solicitud } from './pages/Solicitud/solicitud';
+import {TestPage} from "./pages/TestPage.tsx";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path='/review' element={<ChefReviews/>}/>
           <Route path="/chat" element={ <Chat/>}/>
           <Route path='/solicitud' element={<Solicitud/>}/>
+          <Route path="/test" element={<TestPage/>}/>
         </Routes>
       </Router>
     </div>

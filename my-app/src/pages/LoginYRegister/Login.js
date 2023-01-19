@@ -63,6 +63,7 @@ export const Login = () => {
 
     return(
        <div className="container mt-5" align="center" style={{boxSizing:"border-box"}}>
+
             <h1>HomeCooking | Login Chef</h1>
             <Container id= "main-container" className="d-grid h-100 m-auto" style={{padding: "35px"}}>
             <Form id="sign in-form" action="" onSubmit={onSubmit} className = "text-center w-100">
@@ -84,6 +85,7 @@ export const Login = () => {
                 Register
             </Button>
         </Container>
+           */
        </div> 
     )
 }

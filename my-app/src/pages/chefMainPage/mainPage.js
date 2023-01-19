@@ -15,9 +15,7 @@ export  const MainPage = () => {
   const [isSolicitudesPasadasEmpty , setIsSolicitudesPasadasEmpty] = useState(false);
 
     useEffect(() => {
-      console.log(sessionStorage.getItem('token'));
         if(sessionStorage.getItem('token') === null){
-          console.log(sessionStorage.getItem('token'));
             window.location.href = '/';
         }
     }, [])
