@@ -1,82 +1,43 @@
 import {Fragment, useState} from "react";
-import {DatePickerChef} from "../components/Calendar/DatePickerChef.js";
 import * as dayjs from "dayjs";
 import {DatePickerClient} from "../components/Calendar/DatePickerClient";
-import {Box, Button, Modal} from "@mui/material";
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-};
+import TextField from '@mui/material/TextField';
+import {LocalizationProvider, PickersDay} from "@mui/x-date-pickers";
+import {DateTimePicker} from "@mui/x-date-pickers/DateTimePicker";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+
 export const TestPage = () => {
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+
+    const [date, setDate] = useState(new Date());
+
+    const getCurrentDate = () => {
+        return dayjs().format("YYYY-MM-DD");
+    }
+
+    const handleDateChange = ( date : Date) => {
+        setDate(date);
+    }
+
+    const allowedDates = [dayjs("2022-01-01T21:11:54"), dayjs("2022-01-03"), dayjs("2022-01-10")];
+
+    function isAllowedDate(date) {
+        return allowedDates.some((allowedDate) => {
+            return allowedDate.isSame(date, "day");
+        });
+    }
 
     return (
         <div>
-            <Button onClick={handleOpen}>Open modal</Button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                <Box sx={{ ...style, width: 400 }}>
-                    <h2 id="parent-modal-title">Text in a modal</h2>
-                    <p id="parent-modal-description">
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </p>
-                    <ChildModal />
-                    <Button onClick={handleClose}>Pene</Button>
-
-                </Box>
-            </Modal>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+                shouldDisableDate={(date) => !isAllowedDate(date)}
+                onChange={ (date) => handleDateChange(date)}
+                renderInput={(params) => {
+                    return <TextField {...params} />;
+                }}
+                value={date}
+            />
+            </LocalizationProvider>
         </div>
-    );
-}
-
-function ChildModal() {
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    return (
-        <Fragment>
-            <Button onClick={handleOpen}>Open Child Modal</Button>
-            <Modal
-                hideBackdrop
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="child-modal-title"
-                aria-describedby="child-modal-description"
-            >
-                <Box sx={{ ...style, width: 200 }}>
-                    <h2 id="child-modal-title">Text in a child modal</h2>
-                    <p id="child-modal-description">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    </p>
-                    <Button onClick={handleClose}>Close Child Modal</Button>
-                </Box>
-
-
-            </Modal>
-        </Fragment>
     );
 }
