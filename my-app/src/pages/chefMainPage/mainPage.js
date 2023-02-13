@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar';
-import "bootstrap/dist/css/bootstrap.min.css";
 import { BsCheckSquare,  BsFillXSquareFill} from "react-icons/bs";
 import { Stack } from 'react-bootstrap';
 import {PedidosCard} from "../../components/Pedidos"

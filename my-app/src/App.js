@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import { BrowserRouter as Router,Routes, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router ,Routes, Route, Switch } from 'react-router-dom';
 import { Register } from './pages/LoginYRegister/Register';
 import { Login } from './pages/LoginYRegister/Login';
 import { MainPage } from './pages/chefMainPage/mainPage';
@@ -9,8 +9,10 @@ import { ChefReviews } from './pages/chefReviews/ChefReviews';
 import { Chat } from './pages/chefChats/Chat';
 import { Solicitud } from './pages/Solicitud/solicitud';
 import {TestPage} from "./pages/TestPage.tsx";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
+
   return (
     <div className="App">
       <Router>
@@ -25,6 +27,28 @@ function App() {
           <Route path="/test" element={<TestPage/>}/>
         </Routes>
       </Router>
+        <Toaster
+            reverseOrder={false}
+            toastOptions={{
+                duration: 1000,
+                position: 'bottom-center',
+                style: {
+                    width: '20vw',
+                    height: '5vh',
+                    fontSize: '20px'
+                },
+                success: {
+                    style: {
+                        background: '#B4EBCA'
+                    }
+                },
+                error: {
+                    style: {
+                        background: '#fd8899'
+                    }
+                }
+            }}
+        />
     </div>
   );
 }

@@ -1,43 +1,19 @@
-import {Fragment, useState} from "react";
-import * as dayjs from "dayjs";
-import {DatePickerClient} from "../components/Calendar/DatePickerClient";
-import TextField from '@mui/material/TextField';
-import {LocalizationProvider, PickersDay} from "@mui/x-date-pickers";
-import {DateTimePicker} from "@mui/x-date-pickers/DateTimePicker";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {useState} from "react";
+import {AddDate} from "../components/AddDate/addDate.tsx";
 
 export const TestPage = () => {
+    const [date, setDate] = useState<Date>(new Date());
 
-    const [date, setDate] = useState(new Date());
+    const [excludeDate , setExcludeDate] = useState<Date[]>([
+        new Date(2023, 2, 13),
+        new Date(2023, 8, 2),
+    ]);
 
-    const getCurrentDate = () => {
-        return dayjs().format("YYYY-MM-DD");
-    }
-
-    const handleDateChange = ( date : Date) => {
-        setDate(date);
-    }
-
-    const allowedDates = [dayjs("2022-01-01T21:11:54"), dayjs("2022-01-03"), dayjs("2022-01-10")];
-
-    function isAllowedDate(date) {
-        return allowedDates.some((allowedDate) => {
-            return allowedDate.isSame(date, "day");
-        });
-    }
+    const [open , setOpen] = useState<boolean>(false);
 
     return (
         <div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-                shouldDisableDate={(date) => !isAllowedDate(date)}
-                onChange={ (date) => handleDateChange(date)}
-                renderInput={(params) => {
-                    return <TextField {...params} />;
-                }}
-                value={date}
-            />
-            </LocalizationProvider>
+            <AddDate setOpen={setOpen} excludeDates={excludeDate}></AddDate>
         </div>
     );
 }

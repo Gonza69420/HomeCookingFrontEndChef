@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./profileimage.css"
 import { storage } from "../firebase";
 import { ref , uploadBytes, getDownloadURL} from "firebase/storage";
+import toast , {Toaster}from 'react-hot-toast';
 export const Profileimage = props => {
     const [personalizar , setPersonalizar] = useState(!props.personalizar);
     const [imageUpload , setImageUpload] = useState(null);
@@ -14,7 +15,7 @@ export const Profileimage = props => {
         console.log("image is not null");
         const imageRef = ref(storage , "images/chef/" + sessionStorage.getItem("mail"));
         uploadBytes(imageRef , imageUpload).then(() => {
-            console.log("Uploaded");
+            toast.success("Image uploaded successfully");
             setImageRef(imageRef);
         }
         ).catch(err => {
@@ -104,6 +105,7 @@ export const Profileimage = props => {
                 <label className="label" for='imgupload'><img className="imagespecific"src={props.src}/></label>
             </div>
             }
+
         </div>
     )
 

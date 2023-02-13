@@ -1,6 +1,10 @@
 import React, {useState, useEffect} from "react";
-import { Form, Button, Container } from "react-bootstrap";
-
+import { Form, Container } from "react-bootstrap";
+import {Button} from "@mui/material";
+import "./Login.css";
+import toast from "react-hot-toast";
+import {iframeEnabled} from "sockjs-client/lib/utils/iframe";
+import {useNavigate} from "react-router";
 
 export const Login = () => {
     const [data, setData] = useState({
@@ -10,15 +14,18 @@ export const Login = () => {
 
     useEffect(() => {
           if(sessionStorage.getItem('token') !== null){
-            console.log(sessionStorage.getItem('token'));
-              window.location.href = '/mainPage';
+              navigate('/mainPage');
           }
       }, [])
-  
+
+  const navigate = useNavigate();
 
     const onSubmit = (e) => {
-        console.log(data);
-        e.preventDefault();
+        if(data.username === '' || data.password === '') {
+            toast.error('Please fill all the fields');
+            return;
+        }
+
             (fetch("http://localhost:8080/api/auth/signin", {
             method: "POST",
             headers: {
@@ -32,61 +39,62 @@ export const Login = () => {
                 })
             .then(res =>{
                 if (res.status === 401 || res.status === 400 || data.username === '' || data.password === '') { 
-                    throw new Error("Invalid credentials");
+                    toast.error( 'Invalid Credentials');
                 } 
                 else {
                     sessionStorage.setItem("mail" , data.username);
-                    return res.json(); 
-
+                    sessionStorage.setItem('token', data.accessToken);
+                    navigate('/mainPage');
                 }
-                })
-            .then(data => {
-                sessionStorage.setItem('token', data.accessToken);
-                window.location.href = '/mainPage';
-            }
-            )).catch(err => console.log(err));
+                }
+            )).catch(err => toast.error(err));
             
        
     }
 
-    const handleChange = (e) => {
-        console.log(e.target.value);
+    const changeUserName = (e) => {
         setData({
             ...data,
-            [e.target.name]: e.target.value
+            username: e.target.value
         })
     }
 
+    const changePassword = (e) => {
+        setData({
+            ...data,
+            password: e.target.value
+        })
+    }
     const handleRegister = () => {
         window.location.href = '/register';
     }
 
     return(
-       <div className="container mt-5" align="center" style={{boxSizing:"border-box"}}>
+        <div className={"backgroundColorLogin"}>
+            <div className={"containerLogin"}>
+                <div className={"containerLoginForm"}>
+                    <h1>HomeCooking | Login Chef</h1>
+                    <div className={"formLogin"}>
+                     <Form.Group className="userNameLogin" controlId="exampleForm.ControlInput0">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control type="email" placeholder="name@example.com" onChange={(e) =>changeUserName(e)} name="username"/>
+                    </Form.Group>
+                    <Form.Group className="userNameLogin" controlId="exampleForm.ControlInput1" >
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" placeholder="Password" onChange={(e) => changePassword(e)} name="password"/>
+                    </Form.Group>
 
-            <h1>HomeCooking | Login Chef</h1>
-            <Container id= "main-container" className="d-grid h-100 m-auto" style={{padding: "35px"}}>
-            <Form id="sign in-form" action="" onSubmit={onSubmit} className = "text-center w-100">
-             <Form.Group className="mb-3 mt-3 w-25 m-auto " controlId="exampleForm.ControlInput0">
-                <Form.Label>Username</Form.Label>
-                <Form.Control type="email" placeholder="name@example.com" onChange={handleChange} name="username"/>
-            </Form.Group>
-            <Form.Group className="mb-3 w-25 position-relative m-auto" controlId="exampleForm.ControlInput1" >
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" onChange={handleChange} name="password"/>
-            </Form.Group>
+                    <Button variant={"contained"} className={"LogInButtonChef"} onClick={(e) => onSubmit(e)}>
+                        Log In
+                    </Button>
 
-            <Button variant="primary" type="submit" className="primary m-auto mb-3 w-25">
-                Submit
-            </Button>
-            
-            </Form>
-            <Button variant="secondary" onClick={handleRegister} className="primary m-auto mb-3 w-25 text-center " >
-                Register
-            </Button>
-        </Container>
-           */
-       </div> 
+                    <Button variant={"contained"} className={"LogInButtonChef"} onClick={handleRegister}>
+                        Register
+                    </Button>
+                    </div>
+                </div>
+           </div>
+        </div>
     )
 }
 

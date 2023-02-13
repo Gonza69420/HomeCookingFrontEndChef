@@ -1,0 +1,74 @@
+.boxAddDateChef{
+    background-color: #f8eadd;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    border: 2px solid #a6a6a6;
+    border-radius: 10px;
+    min-width: 34% !important;
+    transform: translate(-50%, -50%);
+    box-shadow: 10px 10px 10px 1px rgba(66, 66, 66, 0.75);
+    padding: 20px;
+}
+
+.tittleAddDate{
+    border-bottom: 1px solid #a6a6a6;
+    margin-bottom: 2%;
+}
+
+.dateAddDatediv{
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.dateAddDateTittle{
+    margin-right: 10px;
+    font-weight: 450;
+    font-family: Satoshi, sans-serif;
+    margin-top: 1%;
+}
+
+.hourAddDatediv{
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.datehourAddDateTittle{
+    margin-right: 10px;
+    font-weight: 450;
+    font-family: Satoshi, sans-serif;
+    margin-top: 1%;
+}
+
+.datehourMaximumAddDateTittle{
+    margin-right: 10px;
+    font-weight: 450;
+    font-family: Satoshi, sans-serif;
+    margin-top: 1%;
+    margin-left: 2%;
+}
+
+.buttonAddDateDiv{
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    align-content: center;
+    justify-content: center;
+}
+
+.siguienteCreateSolicitude{
+    width: 40% !important;
+    margin-right: 1%;
+    border-radius: 20px;
+}
+
+.cancelarCreateSolicitude{
+    width: 40% !important;
+    border-radius: 20px;
+
+}

@@ -1,10 +1,15 @@
 import {useRef , useState, useEffect, Fragment} from "react"
 import React from 'react'
-import {Form, Button, Container } from 'react-bootstrap'
-
+import {Form, Container } from 'react-bootstrap'
+import "./Login.css";
+import { Button } from '@mui/material'
+import toast from "react-hot-toast";
+import {useNavigate} from "react-router";
 
 
 export const Register = () => {
+    const navigate = useNavigate();
+
     const [data, setData] = useState({
         username: '',
         password: '',
@@ -18,8 +23,15 @@ export const Register = () => {
     })
 
     const onSubmit = (e) => {
-        console.log(data);
-            (fetch("http://localhost:8080/api/auth/signup", {
+        if( data.password !== data.confirmPassword){
+            toast.error('Passwords do not match');
+            return;
+        }
+        if(data.username === '' || data.password === '' || data.confirmPassword === '' || data.firstName === '' || data.lastName === '' || data.phone === '' || data.address === '' || data.dni === '') {
+            toast.error('Please fill all the fields');
+            return;
+        }
+        (fetch("http://localhost:8080/api/auth/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -37,24 +49,16 @@ export const Register = () => {
              })
             .then(res => {
                 if (res.status === 401 || res.status === 400 || data.username === '' || data.password === '') { 
-                    throw new Error("Invalid credentials");
+                    toast.error( 'Invalid Credentials');
                 } 
                 else {
-                    return res.json();
+                    navigate("/")
                 }
-                })
-            .then(data => {
-                console.log(sessionStorage.getItem('token'));
-                window.location.href = '/';
-
-            }
-            )).catch(err => console.log(err));
-            
-        e.preventDefault();
+                }
+            )).catch(err => toast(err.message));
     }
 
     const handleChange = (e) => {
-        console.log(e.target.value);
         setData({
             ...data,
             [e.target.name]: e.target.value
@@ -62,51 +66,48 @@ export const Register = () => {
     }
 
     return(
-        <div className="contenedor mt-5">
-            <h1>Register</h1>
-            <br/>
-            <Container id= "main-container" className="d-grid h-100" style={{padding: "35px"}}>
-            <Form id="sign in-form" action="" onSubmit={onSubmit} className = "text-center w-100">
-             <Form.Group className="mb-3 w-25 m-auto " controlId="exampleForm.ControlInput0">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="name@example.com" onChange={handleChange} name="username"/>
-            </Form.Group>
-            <Form.Group className="mb-3 w-25 m-auto " controlId="exampleForm.ControlInput1" >
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" onChange={handleChange} name="password"/>
-            </Form.Group>
-            <Form.Group className="mb-3 w-25 m-auto" controlId="exampleForm.ControlInput2">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" onChange={handleChange} name="confirmPassword" />
-            </Form.Group>
-            <Form.Group className="mb-3 w-25 m-auto" controlId="exampleForm.ControlInput3" >
-                <Form.Label>First Name</Form.Label>
-                <Form.Control type="text" placeholder="First Name" name="firstName" onChange={handleChange}/>
-            </Form.Group>
-            <Form.Group className="mb-3 w-25 m-auto" controlId="exampleForm.ControlInput4">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control type="text" placeholder="Last Name" name ="lastName" onChange={handleChange} />
-            </Form.Group>
-            <Form.Group className="mb-3 mt-3 w-25 m-auto" controlId="exampleForm.ControlInput5">
-                <Form.Label>Phone Number</Form.Label>
-                <Form.Control type="text" placeholder="Phone Number" name= "phone"onChange={handleChange}/>
-            </Form.Group>
-            <Form.Group className="mb-3 w-25 m-auto" controlId="exampleForm.ControlInput6">
-                <Form.Label>Adress</Form.Label>
-                <Form.Control type="text" placeholder="Adress" name="address" onChange={handleChange}/>
-            </Form.Group>
-            <Form.Group className="mb-3 w-25 m-auto" controlId="exampleForm.ControlInput6">
-                <Form.Label>DNI</Form.Label>
-                <Form.Control type="text" placeholder="DNI" name="dni" onChange={handleChange}/>
-            </Form.Group>
-            
-            
-            <Button variant="primary" type="submit" className="primary">
-                Submit
-            </Button>
-
-            </Form>
-        </Container>
+        <div className="containerLogin">
+            <div className={"containerRegisterLogin"}>
+                <h1 className={"registerTittle"}>Register</h1>
+                <br/>
+                    <Form id="sign in-form" action="" className = "text-center w-100">
+                     <Form.Group className="registerFields" controlId="exampleForm.ControlInput0">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control type="email" placeholder="name@example.com" onChange={handleChange} name="username"/>
+                    </Form.Group>
+                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput1" >
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" placeholder="Password" onChange={handleChange} name="password"/>
+                    </Form.Group>
+                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
+                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Control type="password" placeholder="Password" onChange={handleChange} name="confirmPassword" />
+                    </Form.Group>
+                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput3" >
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control type="text" placeholder="First Name" name="firstName" onChange={handleChange}/>
+                    </Form.Group>
+                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput4">
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control type="text" placeholder="Last Name" name ="lastName" onChange={handleChange} />
+                    </Form.Group>
+                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput5">
+                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Control type="text" placeholder="Phone Number" name= "phone"onChange={handleChange}/>
+                    </Form.Group>
+                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput6">
+                        <Form.Label>Adress</Form.Label>
+                        <Form.Control type="text" placeholder="Adress" name="address" onChange={handleChange}/>
+                    </Form.Group>
+                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput6">
+                        <Form.Label>DNI</Form.Label>
+                        <Form.Control type="text" placeholder="DNI" name="dni" onChange={handleChange}/>
+                    </Form.Group>
+                        <Button variant="contained" type="submit" className={"buttonSubmitRegister"} onClick={(e) => onSubmit(e)}>
+                            Submit
+                        </Button>
+                    </Form>
+            </div>
         </div>
   )
 }

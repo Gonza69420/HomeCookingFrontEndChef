@@ -12,6 +12,9 @@ import "./ProfileChef.css"
 import { ReviewCard } from '../../components/reviewCard';
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { BsDashSquareDotted } from 'react-icons/bs';
+import {Modal, Box} from "@mui/material";
+import "../../components/Popup/Popup.css"
+import toast from "react-hot-toast";
 
 export const ProfileChef = () => {
     const [uploadMenu , setUploadMenu] = useState(false);
@@ -30,7 +33,6 @@ export const ProfileChef = () => {
         imageurl : ""
     });
     const [chefData , setChefData] = useState({
-        
         firstName: '',
         lastName: '',
         mail: '',
@@ -46,7 +48,8 @@ export const ProfileChef = () => {
             imageurl: "",
             category: "",
             shortDescription: "",
-            description: ""
+            description: "",
+            price: ""
         }],
         bio: ''
        });
@@ -59,7 +62,8 @@ export const ProfileChef = () => {
         shortDescription: "",
         description: "",
         category: "",
-        imageurl: ""
+        imageurl: "",
+        price: ""
     });
 
     const[idchef , setIdChef] = useState('');
@@ -88,7 +92,6 @@ export const ProfileChef = () => {
         .then(response => response.json())
         .then(result  => {
             setChefData(result);
-            console.log(result.id)
             setIdChef(result.id);
         }
         )
@@ -100,7 +103,6 @@ export const ProfileChef = () => {
 
 
      useEffect (() => {
-        console.log(idchef);
         var requestOptions = {
         method: 'GET',
         redirect: 'follow'
@@ -109,11 +111,8 @@ export const ProfileChef = () => {
         fetch("http://localhost:8080/dbInfo/getMenuByChef/" + idchef, requestOptions)
         .then(response => response.text())
         .then(result => {
-            console.log(JSON.parse(result));
-            
             dataMenu[0]= (JSON.parse(result));
             
-            console.log(dataMenu)
             if(dataMenu[0][0].name !== undefined){
                 setisDataMenuEmpty(true);
             }
@@ -124,7 +123,6 @@ export const ProfileChef = () => {
 
 
     useEffect (() => {
-        console.log(idchef);
         var requestOptions = {
         method: 'GET',
         redirect: 'follow'
@@ -255,18 +253,18 @@ export const ProfileChef = () => {
     }
 
     useEffect (() => {
-        if(menu.name === ""  || uploadMenu === false ){
-            console.log("no se puede subir");
+        if(uploadMenu === false){
+            setUploadMenu(false);
             return;
         }
 
         uploadImageMenu(menu.name)
-        console.log(menu);
         if( menu.imageurl === ""){
-            console.log("no cargo imagen");
             return;
         }
-        console.log(menu.imageurl);
+
+        toast.success("Uploading...")
+
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         
@@ -276,7 +274,8 @@ export const ProfileChef = () => {
             description : menu.description,
             imageurl : menu.imageurl,
             category: menu.category,
-            chefid: chefData.id
+            chefid: chefData.id,
+            price : parseFloat(menu.price)
         });
         
         var requestOptions = {
@@ -288,20 +287,18 @@ export const ProfileChef = () => {
           body: raw,
           redirect: 'follow'
         };
-        console.log(raw);
-        //kjnkjnkj
         fetch("http://localhost:8080/dbInfo/NewMenu/" + sessionStorage.getItem("mail"), requestOptions)
           .then(response => {
-            console.log("subiendo");
+            toast.success("Cargando")
             response.text();
         })
           .then(result => {
-            window.location.reload();
+              window.location.reload();
         }
           )
-          .catch(error => console.log('error', error));
+          .catch(error => toast.error( error.message));
        
-    }, [menu.imageurl, menu.name, uploadMenu])
+    }, [menu.imageurl, uploadMenu])
 
  
     //RESTAURANTE
@@ -337,7 +334,6 @@ export const ProfileChef = () => {
           redirect: 'follow'
         };
         console.log(raw);
-        //kjnkjnkj
         fetch("http://localhost:8080/dbInfo/CreateRestaurant/" + sessionStorage.getItem("mail"), requestOptions)
           .then(response => {
             console.log("subiendo");
@@ -374,7 +370,6 @@ export const ProfileChef = () => {
     }
 
     const handleSaveBio = () => {
-        console.log(chefData.bio);
         var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
 
@@ -392,7 +387,6 @@ export const ProfileChef = () => {
             fetch("http://localhost:8080/api/auth/editChefBio/" + sessionStorage.getItem("mail"), requestOptions)
             .then(response => response.text())
             .then(result => {
-                console.log(result)
                 window.location.reload(false);
             }
             )
@@ -412,9 +406,9 @@ export const ProfileChef = () => {
     }
 
     return (
-        <div className='bg-dark'>
+        <div className='backgroundProfileChef'>
             <Navbar/>
-            <div className='container mt-5 bg-white'>
+            <div className='containerprofileClient'>
                 <Stack direction="horizontal" className='justify-content-start' gap={3}>
                     {personalizar && 
                     <Profileimage classname="imageprofile" src={chefData.imageURL} personalizar={true}/> 
@@ -483,35 +477,34 @@ export const ProfileChef = () => {
                 }
                     <div>
                     <AnadirCard onClick={() => setRestaurantPopUp(true)}/>
-                    {restaurantPopUp && 
-                    <>
-                        <Popup setTrigger={setRestaurantPopUp} trigger={restaurantPopUp} type="popup-innerAdd">
-                        <h1 className='tittle'>Añadir Restaurante</h1>
-                        
-                        <div className='container-fluid mt-5'>    
 
-                        <input type="file" className="inputCoso" id="imgupload" onChange={(event) => {
-                            setImageUpload(event.target.files[0]);
-                        } } />
-                        <label for='imgupload'><button class="btn btn-warning">Upload Image</button></label>
-                            
-                                <br/>
-                                <Form >
-                                <Form.Group className="m-3 " controlId="">
-                                <Form.Control type="text" placeholder="Enter Restaurant Name..." onChange={handleChangeRestaurant} name="name"/>
-                                </Form.Group>
-                                </Form>
+                        <Modal open={restaurantPopUp}>
+                            <Box className={"BoxCreateRestaurant"}>
+                                <div className={"popup-innerAdd"}>
+                                    <h1 className='tittle'>Añadir Restaurante</h1>
 
-                            </div>
-                            <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
-                                <div className="centerItems">
-                                <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonRestaurant}>Cancel</Button>
-                                <Button className="successbutton"variant="success" onClick={handleSaveButtonRestaurant}>Save</Button>
+                                    <div className='uploadImageRestaurant'>
+                                        <input type="file" className="inputCoso" id="imgupload" onChange={(event) => {
+                                            setImageUpload(event.target.files[0]);
+                                        } } />
+                                        <label for='imgupload'><button class="btn btn-warning">Upload Image</button></label>
+                                    </div>
+                                            <br/>
+                                            <Form >
+                                            <Form.Group className="m-3 " controlId="">
+                                            <Form.Control type="text" placeholder="Enter Restaurant Name..." onChange={handleChangeRestaurant} name="name"/>
+                                            </Form.Group>
+                                            </Form>
+
+                                        <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
+                                            <div className="centerItems">
+                                            <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonRestaurant}>Cancel</Button>
+                                            <Button className="successbutton"variant="success" onClick={handleSaveButtonRestaurant}>Save</Button>
+                                            </div>
+                                        </Stack>
                                 </div>
-                            </Stack>
-                        </Popup>
-                    </>
-                    }
+                            </Box>
+                        </Modal>
                     
                     </div>
                     </>
@@ -525,7 +518,7 @@ export const ProfileChef = () => {
                 <div className='containercards'>
 
                 <Stack direction="horizontal" className='mt-4' gap={3}>
-                    
+
                     {isDataMenuEmpty && 
                     <>
                     {!personalizar &&
@@ -533,7 +526,7 @@ export const ProfileChef = () => {
                     {dataMenu[0]?.map((menu, index) => {
                         return (
                             <>
-                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.shortDescription} menuid={menu.id} eliminar={personalizar} />
+                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.shortDescription} menuid={menu.id} eliminar={personalizar} price={menu.price} />
                             </>
                         )
                     })}
@@ -542,12 +535,8 @@ export const ProfileChef = () => {
                     </>
                     }
 
-
-
-                    
-
                     {personalizar &&
-                    <>
+                    <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                         {dataMenu[0]?.map((menu, index) => {
                         return (
                                 <MenuCard url={menu.imageurl} name={menu.name} description={menu.shortDescription} menuid={menu.id} eliminar={personalizar}  />
@@ -558,46 +547,62 @@ export const ProfileChef = () => {
 
 
                     <AnadirCard onClick={() => setmenuPopUpAdd(true)}/>
-                    {menuPopUpAdd && 
-                        <>
-                            <Popup setTrigger={setmenuPopUpAdd} trigger={menuPopUpAdd} type="popup-innerAdd">
+                    <Modal open={menuPopUpAdd}>
+                        <Box className={"BoxCreateRestaurant"}>
+                            <div className={"popup-innerAdd"}>
                                 <h1 className='tittle'>Añadir Menu</h1>
 
                                 <br/>
                                 <input type="file" className="inputCoso" id="imgupload" onChange={(event) => {
                                     setImageUpload(event.target.files[0]);
-                                } } />
-                                <label for='imgupload'><button class="btn btn-warning">Upload Image</button></label>
-                                
-                                <Form >
-                                <Form.Group className="m-3 " controlId="">
-                                    <Form.Control type="text" placeholder="Enter Menu Name..." onChange={handleChangeMenu} name="name"/>
-                                </Form.Group>
-                                <Form.Group className="m-3 " controlId="">
-                                    <Form.Control type="text" placeholder="Enter Descripcion Corta..." onChange={handleChangeMenu} name="shortDescription"/>
-                                </Form.Group>
-                                <Form.Group className="m-3 " controlId="">
-                                    <Form.Control type="text" placeholder="Enter Descripcion Larga..." onChange={handleChangeMenu} name="description"/>
-                                </Form.Group>
-                                <Form.Group className="m-3 " controlId="">
-                                    <Form.Control type="text" placeholder="Enter Categoria..." onChange={handleChangeMenu} name="category"/>
-                                </Form.Group>
-                                
+                                }}/>
+                                <label htmlFor='imgupload'>
+                                    <button className="btn btn-warning">Upload Image</button>
+                                </label>
+
+                                <Form>
+                                    <Form.Group className="m-3 " controlId="">
+                                        <Form.Control type="text" placeholder="Enter Menu Name..."
+                                                      onChange={handleChangeMenu} name="name"/>
+                                    </Form.Group>
+                                    <Form.Group className="m-3 " controlId="">
+                                        <Form.Control type="text" placeholder="Enter Descripcion Corta..."
+                                                      onChange={handleChangeMenu} name="shortDescription"/>
+                                    </Form.Group>
+                                    <Form.Group className="m-3 " controlId="">
+                                        <Form.Control type="text" placeholder="Enter Descripcion Larga..."
+                                                      onChange={handleChangeMenu} name="description"/>
+                                    </Form.Group>
+                                    <Form.Group className="m-3 " controlId="">
+                                        <Form.Control type="text" placeholder="Enter Categoria..."
+                                                      onChange={handleChangeMenu} name="category"/>
+                                    </Form.Group>
+                                    <Form.Group className="m-3 " controlId="">
+                                        <Form.Control type="number" placeholder="Enter Precio..."
+                                                      onChange={(e) => {
+                                                          let num = parseFloat(e.target.value);
+                                                          num = (Math.round( num * 100 ) / 100).toFixed(2);
+                                                          setMenu({...menu, price: num})
+                                                          console.log(menu)
+                                                      }} name="category"/>
+                                    </Form.Group>
+
                                 </Form>
 
                                 <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
-                                <div className="centerItems">
-                                <Button className="cancelbutton" variant="danger" onClick={handleCancelButtonMenu}>Cancel</Button>
-                                <Button className="successbutton"variant="success" onClick={handleUploadMenu}>Save</Button>
-                                </div>
-                            </Stack>
-                            </Popup>
-                        </>
-                        }
-                        
-                    </>
-                    }
+                                    <div className="centerItems">
+                                        <Button className="cancelbutton" variant="danger"
+                                                onClick={handleCancelButtonMenu}>Cancel</Button>
+                                        <Button className="successbutton" variant="success"
+                                                onClick={handleUploadMenu}>Save</Button>
+                                    </div>
+                                </Stack>
+                            </div>
+                        </Box>
+                    </Modal>
 
+                    </Stack>
+                    }
                 </Stack>
                 </div>
                 <br/>
@@ -606,3 +611,4 @@ export const ProfileChef = () => {
         </div>
         )
 }
+
