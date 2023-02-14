@@ -1,0 +1,30 @@
+
+
+.containerCalendar{
+    height: 20% !important;
+}
+
+.buttonsDateCalendarDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.AgregarFechaButton{
+    width: 49% !important;
+    height: 100px !important;
+    margin-right: 2% !important;
+    font-family: Satoshi, sans-serif;
+    border-radius: 20px;
+}
+
+.EliminarFechaButton{
+    width: 49% !important;
+    height: 100px !important;
+    background-color: rgb(233, 22, 14) !important;
+    font-family: Satoshi, sans-serif;
+    border-radius: 20px;
+
+}

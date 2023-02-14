@@ -29,6 +29,12 @@ export const MenuItems= [
     },
     {
         id: 5,
+        title : "Agenda",
+        url: "/calendarChef",
+        cName: "nav-link"
+    },
+    {
+        id: 6,
         title:"Chats",
         url: "/chat",
         cName: "nav-link"

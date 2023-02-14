@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {AddDate} from "../components/AddDate/addDate.tsx";
+import {FullCalendarChef} from "../components/Calendar/FullCalendar/FullCalendarChef.tsx";
 
 export const TestPage = () => {
     const [date, setDate] = useState<Date>(new Date());
@@ -13,7 +14,7 @@ export const TestPage = () => {
 
     return (
         <div>
-            <AddDate setOpen={setOpen} excludeDates={excludeDate}></AddDate>
+            <FullCalendarChef></FullCalendarChef>
         </div>
     );
 }
