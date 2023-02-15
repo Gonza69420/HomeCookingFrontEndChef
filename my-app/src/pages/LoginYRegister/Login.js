@@ -43,7 +43,7 @@ export const Login = () => {
                 } 
                 else {
                     sessionStorage.setItem("mail" , data.username);
-                    sessionStorage.setItem('token', data.accessToken);
+                    sessionStorage.setItem('token', res.accessToken);
                     navigate('/mainPage');
                 }
                 }

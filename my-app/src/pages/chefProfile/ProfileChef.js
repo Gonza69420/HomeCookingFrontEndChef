@@ -526,7 +526,7 @@ export const ProfileChef = () => {
                     {dataMenu[0]?.map((menu, index) => {
                         return (
                             <>
-                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.shortDescription} menuid={menu.id} eliminar={personalizar} price={menu.price} />
+                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.description} menuid={menu.id} eliminar={personalizar} price={menu.price} shortDescription={menu.shortDescription}/>
                             </>
                         )
                     })}
@@ -539,7 +539,7 @@ export const ProfileChef = () => {
                     <Stack direction="horizontal" className='justify-content-start mt-4' gap={3}>
                         {dataMenu[0]?.map((menu, index) => {
                         return (
-                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.shortDescription} menuid={menu.id} eliminar={personalizar}  />
+                                <MenuCard url={menu.imageurl} name={menu.name} description={menu.description} menuid={menu.id} eliminar={personalizar} shortDescription={menu.shortDescription}  />
                         )
                     })}
 

@@ -15,19 +15,6 @@ export const MenuItems= [
 
     },
     {
-        id: 3,
-        title:"Reviews",
-        url: "/review",
-        cName: "nav-link"
-
-    },
-    {
-        id: 4,
-        title:"Solicitud",
-        url: "/solicitud",
-        cName: "nav-link"
-    },
-    {
         id: 5,
         title : "Agenda",
         url: "/calendarChef",

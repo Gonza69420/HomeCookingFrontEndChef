@@ -129,12 +129,6 @@ export  const MainPage = () => {
       }
     }
 
-
-
-
-
-
-
     const setNoBuscarChef = () => {
       var raw = "";
 
