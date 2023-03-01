@@ -2,16 +2,10 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import "./FullCalendarChef.css"
 import timeGridDay from "@fullcalendar/timegrid";
-export interface eventDate{
-    date : Date;
-    title : string;
-    startTime : Date;
-    endTime : Date;
-    type : string;
-}
+import {EventCalendar} from "../../../Models/EventCalendar";
 
 interface Props {
-    events : eventDate[];
+    events : EventCalendar[];
 }
 
 
@@ -24,18 +18,18 @@ export const FullCalendarChef = (props : Props) => {
         var events = [];
         props.events.map((event) => {
             let color = "";
-            if(event.type === "completed"){
+            if(event.available === "completed"){
                 color = "grey";
             }
-            else if(event.type === "available"){
+            else if(event.available === "available"){
                 color = "green";
             }
-            else if(event.type === "reserved"){
+            else if(event.available === "reserved"){
                 color = "red";
             }
 
             events.push({
-                title: event.title,
+                title: event.,
                 start: event.date,
                 startTime: event.startTime,
                 endTime: event.endTime,

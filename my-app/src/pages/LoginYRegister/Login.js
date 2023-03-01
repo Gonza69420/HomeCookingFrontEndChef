@@ -26,7 +26,7 @@ export const Login = () => {
             return;
         }
 
-            (fetch("http://localhost:8080/api/auth/signin", {
+        (fetch("http://localhost:8080/api/auth/signin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -36,20 +36,22 @@ export const Login = () => {
                 password: data.password,
                 role : "ROLE_CHEF"
             })
-                })
+        })
             .then(res =>{
-                if (res.status === 401 || res.status === 400 || data.username === '' || data.password === '') { 
+
+                if (res.status === 401 || res.status === 400 || data.username === '' || data.password === '') {
                     toast.error( 'Invalid Credentials');
-                } 
+                }
                 else {
-                    sessionStorage.setItem("mail" , data.username);
-                    sessionStorage.setItem('token', res.accessToken);
-                    navigate('/mainPage');
+                    res.json().then(data => {
+                        sessionStorage.setItem("mail", data.email);
+                        sessionStorage.setItem('token', data.accessToken);
+                        console.log(data);
+                        navigate('/mainPage');
+                    }).catch(err => toast.error(err));
                 }
-                }
-            )).catch(err => toast.error(err));
-            
-       
+            })
+            .catch(err => toast.error(err)));
     }
 
     const changeUserName = (e) => {

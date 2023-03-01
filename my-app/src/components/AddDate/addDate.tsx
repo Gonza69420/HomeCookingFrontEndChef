@@ -3,10 +3,12 @@ import {DatePickerChef} from "../Calendar/Date/DatePickerChef.tsx";
 import {HourPickerChef} from "../Calendar/Hour/hourPickerChef.tsx";
 import {useState} from "react";
 import "./AddDate.css";
+import {addDateChef} from "../../queries/DateQueries.tsx";
+import toast from "react-hot-toast";
 interface Props{
 excludeDates : Date[];
 
-//open : boolean;
+open : boolean;
 
 setOpen : (open : boolean) => void;
 
@@ -15,15 +17,22 @@ export const AddDate = (props : Props) => {
 const [date, setDate] = useState<Date>(new Date());
 const [minHour, setMinHour] = useState<Date>(new Date());
 const [maxHour, setMaxHour] = useState<Date>(new Date());
-const [open , setOpen] = useState<boolean>(false);
 
 const handleClose = () => {
-    setOpen(false);
+    props.setOpen(false);
 }
+
+    const handleUpload = () => {
+        addDateChef({date, minHour, maxHour}).then(() => toast.success("Success")).catch((e) => {
+            toast.error("Error al añadir la fecha");
+        });
+        props.setOpen(false);
+    }
+
+
     return (
         <div>
-            <Button onClick={() => setOpen(true)}> PEENE</Button>
-            <Modal open={open}>
+            <Modal open={props.open}>
                 <Box className={"boxAddDateChef"}>
                     <div>
                         <div className={"tittleAddDate"}>
@@ -43,7 +52,7 @@ const handleClose = () => {
                         </div>
 
                         <div className={"buttonAddDateDiv"}>
-                            <Button variant="contained" color="success" className={"siguienteCreateSolicitude"} >Siguiente</Button>
+                            <Button variant="contained" color="success" className={"siguienteCreateSolicitude"} onClick={handleUpload}>Siguiente</Button>
                             <Button variant="contained" color="error" onClick={handleClose} className={"cancelarCreateSolicitude"}>Cancelar</Button>
                         </div>
                     </div>
