@@ -25,14 +25,11 @@ export const addDateChef = (event : EventChef) => {
             }
         }
 
-        return axios.post('http://localhost:8080/calendar/addAvailableDate/' + sessionStorage.getItem('mail'),{
-            eventDate: {
+        return axios.post('http://localhost:8080/calendar/addEvent/' + sessionStorage.getItem('mail'), {
                 date: event.date,
                 eventStart: event.minHour,
-                eventEnd: event.maxHour
-            },
-            chefId: "2",
-            status: "AVAILABLE"
+                eventEnd: event.maxHour,
+                description: "Habilitado"
             }
             , config)
 }
@@ -49,13 +46,15 @@ export const getChefDates = (options : IOptions) => {
     }
 
     const getData = () => {
-        return axios.get('http://localhost:8080/calendar/calendar/getEvents/' + sessionStorage.getItem('mail'), config)
+        return axios.get('http://localhost:8080/calendar/getEvents/' + sessionStorage.getItem('mail'), config)
             .then((res) => {
                 setLoading(false);
+                options.onCompleted(res.data);
                 return res.data;
             })
             .catch((e) => {
                 setError(e.message);
+                options.onError(e);
             });
     }
 

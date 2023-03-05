@@ -4,10 +4,11 @@ import {DateTimePicker} from "@mui/x-date-pickers/DateTimePicker";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {useState} from "react";
 import * as dayjs from "dayjs";
+import {EventCalendar} from "../../../Models/EventCalendar";
 
 interface Props {
     onChange : (date : Date) => void;
-    excludeDates : Date[];
+    excludeDates : EventCalendar[];
 }
 export const DatePickerChef = (props : Props) => {
     const [value, setValue] = useState(new Date());
@@ -27,7 +28,7 @@ export const DatePickerChef = (props : Props) => {
 
     function isDateNotAllowed(date) {
         return props.excludeDates.some((excludeDate) => {
-            return dayjs(excludeDate).isSame(date, "day");
+            return dayjs(excludeDate.eventDate.date).isSame(date, "day");
         });
     }
 

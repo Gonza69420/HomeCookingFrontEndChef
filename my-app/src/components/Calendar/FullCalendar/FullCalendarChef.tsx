@@ -29,10 +29,10 @@ export const FullCalendarChef = (props : Props) => {
             }
 
             events.push({
-                title: event.,
-                start: event.date,
-                startTime: event.startTime,
-                endTime: event.endTime,
+                title: event.description,
+                start: event.eventDate.date,
+                startTime: event.eventDate.eventStart,
+                endTime: event.eventDate.eventEnd,
                 backgroundColor:color
             })
         })

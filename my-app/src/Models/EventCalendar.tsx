@@ -6,7 +6,7 @@ export interface EventCalendar{
         eventStart : Date,
         eventEnd : Date
     },
+    description : string,
     available : string
-    chef : {}
 
 }

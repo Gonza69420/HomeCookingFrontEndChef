@@ -11,17 +11,11 @@ import {EventCalendar} from "../../Models/EventCalendar.tsx";
 export const CalendarChef = () => {
     const [openAddDate, setOpenAddDate] = useState<boolean>(false);
 
-    const [excludeDates, setExcludeDates] = useState<Date[]>([
-        new Date(2023, 1, 17),
-        new Date(2023, 1, 21),
-        new Date(2023, 1, 23),
-    ]);
-
     const [events , setEvents] = useState<EventCalendar[]>([]);
 
     const {loading , data , error} = getChefDates( {
         onCompleted: (data) => {
-
+            setEvents(data)
         },
         onError: (error) => {
             toast.error(error.message)
@@ -46,7 +40,7 @@ export const CalendarChef = () => {
                     <Button variant="contained" className={"EliminarFechaButton"}>Eliminar Fecha</Button>
                 </div>
             </div>
-            <AddDate excludeDates={excludeDates} setOpen={setOpenAddDate} open={openAddDate}></AddDate>
+            <AddDate excludeDates={events} setOpen={setOpenAddDate} open={openAddDate}></AddDate>
         </div>
     )
 }

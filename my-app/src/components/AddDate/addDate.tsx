@@ -5,8 +5,9 @@ import {useState} from "react";
 import "./AddDate.css";
 import {addDateChef} from "../../queries/DateQueries.tsx";
 import toast from "react-hot-toast";
+import {EventCalendar} from "../../Models/EventCalendar";
 interface Props{
-excludeDates : Date[];
+excludeDates : EventCalendar[];
 
 open : boolean;
 
