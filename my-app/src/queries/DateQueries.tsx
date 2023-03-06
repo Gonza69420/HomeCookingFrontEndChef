@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import {EventCalendar} from "../Models/EventCalendar";
 
 interface EventChef {
 date : Date;
@@ -37,30 +38,30 @@ export const addDateChef = (event : EventChef) => {
 
 export const getChefDates = (options : IOptions) => {
     const [loading , setLoading] = useState<boolean>(true);
+    const [data, setData] = useState<EventCalendar[]>([] as EventCalendar[]);
     const [error , setError] = useState<string>('');
 
-    const config = {
-        headers: {
-            "Content-Type": "application/json"
+    useEffect(() => {
+        const config = {
+            headers: {
+                "Content-Type": "application/json"
+            }
         }
-    }
-
-    const getData = () => {
-        return axios.get('http://localhost:8080/calendar/getEvents/' + sessionStorage.getItem('mail'), config)
+        axios.get('http://localhost:8080/calendar/getEvents/' + sessionStorage.getItem('mail'), config)
             .then((res) => {
                 setLoading(false);
                 options.onCompleted(res.data);
-                return res.data;
+                setData(res.data);
             })
             .catch((e) => {
                 setError(e.message);
                 options.onError(e);
             });
-    }
+    } , [])
 
     return {
         loading: loading,
-        data: getData(),
+        data: data,
         error: error
     }
 }

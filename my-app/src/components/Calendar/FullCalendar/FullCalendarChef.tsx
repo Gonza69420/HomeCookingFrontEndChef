@@ -13,31 +13,40 @@ interface Props {
 
 export const FullCalendarChef = (props : Props) => {
 
+    const getDateAndHourFromEvents = (datee : Date , hourr : Date) => {
+        console.log(datee)
+        const date = new Date(datee);
+        const hour = new Date(hourr);
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour.getHours(), hour.getMinutes());
+    }
+
 
     const getEvents = () => {
         var events = [];
         props.events.map((event) => {
             let color = "";
-            if(event.available === "completed"){
+            if(event.available === "COMPLETED"){
                 color = "grey";
             }
-            else if(event.available === "available"){
+            else if(event.available === "AVAILABLE"){
                 color = "green";
             }
-            else if(event.available === "reserved"){
+            else if(event.available === "RESERVED"){
                 color = "red";
             }
 
             events.push({
                 title: event.description,
-                start: event.eventDate.date,
-                startTime: event.eventDate.eventStart,
-                endTime: event.eventDate.eventEnd,
+                start: getDateAndHourFromEvents(event.eventDate.date , event.eventDate.eventStart),
+                end:  getDateAndHourFromEvents(event.eventDate.date , event.eventDate.eventEnd),
+
                 backgroundColor:color
             })
         })
         return events;
     }
+
+
 
     return(
         <div className={"calendarChef"}>

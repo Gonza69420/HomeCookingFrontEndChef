@@ -16,6 +16,7 @@ export const CalendarChef = () => {
     const {loading , data , error} = getChefDates( {
         onCompleted: (data) => {
             setEvents(data)
+            console.log(events)
         },
         onError: (error) => {
             toast.error(error.message)
