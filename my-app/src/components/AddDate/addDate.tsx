@@ -24,9 +24,7 @@ const handleClose = () => {
 }
 
     const handleUpload = () => {
-        addDateChef({date, minHour, maxHour}).then(() => toast.success("Success")).catch((e) => {
-            toast.error("Error al añadir la fecha");
-        });
+        addDateChef({date, minHour, maxHour}).then(() => toast.success("Success"))
         props.setOpen(false);
     }
 
@@ -42,7 +40,7 @@ const handleClose = () => {
 
                         <div className={"dateAddDatediv"}>
                             <h3 className={"dateAddDateTittle"}>Fecha: </h3>
-                            <DatePickerChef excludeDates={props.excludeDates} onChange={setDate} ></DatePickerChef>
+                            <DatePickerChef onChange={setDate} ></DatePickerChef>
                         </div>
 
                         <div className={"hourAddDatediv"}>

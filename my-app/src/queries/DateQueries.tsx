@@ -32,7 +32,9 @@ export const addDateChef = (event : EventChef) => {
                 eventEnd: event.maxHour,
                 description: "Habilitado"
             }
-            , config)
+            , config).catch((e) => {
+            toast.error(e.message);
+        });
 }
 
 

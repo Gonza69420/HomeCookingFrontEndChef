@@ -9,10 +9,12 @@ interface Props{
     label : string;
 
     minHour?: Date;
+    maxHour?: Date;
 }
 export const HourPickerChef = (props : Props) => {
     const [hour, setHour] = useState<Date>(new Date());
     const [hasMinHour, setHasMinHour] = useState<boolean>(false);
+    const [hasMaxHour, setHasMaxHour] = useState<boolean>(false);
 
     const handleHourChange = (newHour : Date) => {
         setHour(newHour);
@@ -22,6 +24,9 @@ export const HourPickerChef = (props : Props) => {
     useEffect(() => {
         if(props.minHour){
             setHasMinHour(true);
+        }
+        if (props.maxHour){
+            setHasMaxHour(true);
         }
     } , [] )
 
