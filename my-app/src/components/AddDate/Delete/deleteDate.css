@@ -1,0 +1,11 @@
+.deleteDateSelect{
+    width: 40% !important;
+    min-width: 40% !important;
+}
+
+.deleteSelectDiv{
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    margin-top: 20px;
+}

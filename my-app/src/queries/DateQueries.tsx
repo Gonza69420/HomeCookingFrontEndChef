@@ -67,3 +67,32 @@ export const getChefDates = (options : IOptions) => {
         error: error
     }
 }
+
+export const deleteDateChef = (event : EventChef) => {
+    const [loading , setLoading] = useState<boolean>(true);
+    const [data, setData] = useState<EventCalendar[]>([] as EventCalendar[]);
+    const [error , setError] = useState<string>('');
+
+}
+
+export const GetHoursFromDate = (date : Date, options : IOptions) => {
+
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+
+    const getDateInISOString = (date : Date) : string => {
+        return date.toISOString().substring(0, 10);
+    }
+
+    return axios.post('http://localhost:8080/calendar/getHoursFromDate/' + sessionStorage.getItem('mail'), {
+        date: getDateInISOString(date)
+    }, config).then((res) => {
+        options.onCompleted(res.data);
+    }) .catch((e) => {
+        options.onError(e);
+    } );
+
+}

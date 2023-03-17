@@ -14,7 +14,6 @@ interface Props {
 export const FullCalendarChef = (props : Props) => {
 
     const getDateAndHourFromEvents = (datee : Date , hourr : Date) => {
-        console.log(datee)
         const date = new Date(datee);
         const hour = new Date(hourr);
         return new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour.getHours(), hour.getMinutes());

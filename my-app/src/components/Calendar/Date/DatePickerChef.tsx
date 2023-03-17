@@ -38,7 +38,7 @@ export const DatePickerChef = (props : Props) => {
         <div>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-                label="Basic example"
+                label="Fecha"
                 value={value}
                 onChange={(newValue) => {
                     handleChange(newValue);
