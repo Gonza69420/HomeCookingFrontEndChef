@@ -63,7 +63,8 @@ export const DeleteDate = (props : Props) => {
 
     const handleDateChange = (event : any) => {
         setDate( new Date(getDatesFromEventCalendars(props.event)[event.target.value].date));
-        GetHoursFromDate(date, {
+        console.log(date)
+        GetHoursFromDate(new Date(getDatesFromEventCalendars(props.event)[event.target.value].date), {
                 onCompleted: (data) => {
                     setHours(data)
                 }, onError: (error) => {
