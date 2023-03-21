@@ -4,7 +4,7 @@ import {HourPickerChef} from "../../Calendar/Hour/hourPickerChef";
 import {useState} from "react";
 import {EventCalendar} from "../../../Models/EventCalendar";
 import './deleteDate.css';
-import {GetHoursFromDate} from "../../../queries/DateQueries.tsx";
+import {deleteEventDate, GetHoursFromDate} from "../../../queries/DateQueries.tsx";
 import toast from "react-hot-toast";
 
 interface Props {
@@ -21,6 +21,7 @@ string : String;
 }
 export const DeleteDate = (props : Props) => {
     const [date, setDate] = useState<Date>(new Date());
+    const [dateAsString, setDateAsString] = useState<String>("");
     const [hours , setHours] = useState<String[]>([]);
     const [hour, setHour] = useState<String>("");
 
@@ -30,6 +31,11 @@ export const DeleteDate = (props : Props) => {
 
     const getYearMonthDay = (datee : Date) => {
         let date = new Date(datee);
+        if (date.getMonth() + 1 < 10) {
+            return date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + date.getDate();
+        } else if (date.getDate() < 10) {
+            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-0" + date.getDate();
+        }
         return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     }
 
@@ -63,7 +69,7 @@ export const DeleteDate = (props : Props) => {
 
     const handleDateChange = (event : any) => {
         setDate( new Date(getDatesFromEventCalendars(props.event)[event.target.value].date));
-        console.log(date)
+        setDateAsString(getYearMonthDay( new Date(getDatesFromEventCalendars(props.event)[event.target.value].date)));
         GetHoursFromDate(new Date(getDatesFromEventCalendars(props.event)[event.target.value].date), {
                 onCompleted: (data) => {
                     setHours(data)
@@ -111,7 +117,7 @@ export const DeleteDate = (props : Props) => {
                         </div>
 
                         <div className={"buttonAddDateDiv"}>
-                            <Button variant="contained" color="success" className={"siguienteCreateSolicitude"} >Eliminar</Button>
+                            <Button variant="contained" color="success" className={"siguienteCreateSolicitude"} onClick={() => deleteEventDate(dateAsString, hour)}>Eliminar</Button>
                             <Button variant="contained" color="error" onClick={handleClose} className={"cancelarCreateSolicitude"}>Cancelar</Button>
                         </div>
                     </div>

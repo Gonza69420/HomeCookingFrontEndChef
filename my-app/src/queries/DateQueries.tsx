@@ -68,6 +68,36 @@ export const getChefDates = (options : IOptions) => {
     }
 }
 
+export const getAvailableChefDates = (options : IOptions) => {
+    const [loading , setLoading] = useState<boolean>(true);
+    const [data, setData] = useState<EventCalendar[]>([] as EventCalendar[]);
+    const [error , setError] = useState<string>('');
+
+    useEffect(() => {
+        const config = {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+        axios.get('http://localhost:8080/calendar/getAvailableDates/' + sessionStorage.getItem('mail'), config)
+            .then((res) => {
+                setLoading(false);
+                options.onCompleted(res.data);
+                setData(res.data);
+            })
+            .catch((e) => {
+                setError(e.message);
+                options.onError(e);
+            });
+    } , [])
+
+    return {
+        loading: loading,
+        data: data,
+        error: error
+    }
+}
+
 export const deleteDateChef = (event : EventChef) => {
     const [loading , setLoading] = useState<boolean>(true);
     const [data, setData] = useState<EventCalendar[]>([] as EventCalendar[]);
@@ -95,4 +125,20 @@ export const GetHoursFromDate = (date : Date, options : IOptions) => {
         options.onError(e);
     } );
 
+}
+
+export const deleteEventDate = (date : string , hourRange : string) => {
+    const config = {
+        headers: {
+            "Content-Type": "multipart/form-data"
+
+        }
+    }
+
+    return axios.post('http://localhost:8080/calendar/deleteEventDate/' + sessionStorage.getItem('mail'), {
+        date: date,
+        hourRange: hourRange
+    }, config).catch((e) => {
+        toast.error(e.message);
+    });
 }

@@ -4,7 +4,7 @@ import {Button} from "@mui/material";
 import "./CalendarChef.css";
 import {AddDate} from "../../components/AddDate/addDate.tsx";
 import {useState} from "react";
-import {getChefDates} from "../../queries/DateQueries.tsx";
+import {getAvailableChefDates, getChefDates} from "../../queries/DateQueries.tsx";
 import toast from "react-hot-toast";
 import {EventCalendar} from "../../Models/EventCalendar.tsx";
 import {DeleteDate} from "../../components/AddDate/Delete/deleteDate.tsx";
@@ -15,6 +15,8 @@ export const CalendarChef = () => {
 
     const [events , setEvents] = useState<EventCalendar[]>([]);
 
+    const [events2 , setEvents2] = useState<EventCalendar[]>([]);
+
     const {loading , data , error} = getChefDates( {
         onCompleted: (data) => {
             setEvents(data)
@@ -23,6 +25,15 @@ export const CalendarChef = () => {
             toast.error(error.message)
         }
     });
+
+    const {loading : loading2 , data : data2 , error : error2} = getAvailableChefDates( {
+        onCompleted: (data) => {
+            setEvents2(data)
+        },
+        onError: (error) => {
+            toast.error(error.message)
+        }
+    })
 
     return (
         <div className={"backgroundProfileChef"}>
@@ -43,7 +54,7 @@ export const CalendarChef = () => {
                 </div>
             </div>
             <AddDate excludeDates={events} setOpen={setOpenAddDate} open={openAddDate}></AddDate>
-            <DeleteDate event={events} open={openRemoveDate} setOpen={setOpenRemoveDate}></DeleteDate>
+            <DeleteDate event={events2} open={openRemoveDate} setOpen={setOpenRemoveDate}></DeleteDate>
         </div>
     )
 }
