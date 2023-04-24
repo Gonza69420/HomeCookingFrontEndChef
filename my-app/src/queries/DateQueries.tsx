@@ -98,27 +98,25 @@ export const getAvailableChefDates = (options : IOptions) => {
     }
 }
 
-export const deleteDateChef = (event : EventChef) => {
-    const [loading , setLoading] = useState<boolean>(true);
-    const [data, setData] = useState<EventCalendar[]>([] as EventCalendar[]);
-    const [error , setError] = useState<string>('');
 
-}
-
-export const GetHoursFromDate = (date : Date, options : IOptions) => {
+export const GetHoursFromDate = (date : string, options : IOptions) => {
 
     const config = {
         headers: {
             "Content-Type": "application/json"
         }
     }
-
+/*
     const getDateInISOString = (date : Date) : string => {
-        return date.toISOString().substring(0, 10);
+        console.log(date)
+        console.log(date.toISOString().substring(0, 10))
+            return date.toISOString().substring(0, 10);
     }
 
-    return axios.post('http://localhost:8080/calendar/getHoursFromDate/' + sessionStorage.getItem('mail'), {
-        date: getDateInISOString(date)
+
+ */
+    return axios.post('http://localhost:8080/calendar/getHoursFromDate/client/' + sessionStorage.getItem('mail'), {
+        date: date
     }, config).then((res) => {
         options.onCompleted(res.data);
     }) .catch((e) => {

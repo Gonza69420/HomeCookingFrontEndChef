@@ -51,7 +51,8 @@ export const ProfileChef = () => {
             description: "",
             price: ""
         }],
-        bio: ''
+        bio: '',
+        fullNameChef: '',
        });
 
     const storage = getStorage();

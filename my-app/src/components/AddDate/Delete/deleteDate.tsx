@@ -31,12 +31,15 @@ export const DeleteDate = (props : Props) => {
 
     const getYearMonthDay = (datee : Date) => {
         let date = new Date(datee);
+        let month : string = (date.getMonth() + 1).toString();
+        let day : string = date.getDate().toString();
         if (date.getMonth() + 1 < 10) {
-            return date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + date.getDate();
-        } else if (date.getDate() < 10) {
-            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-0" + date.getDate();
+            month = "0" + (date.getMonth() + 1).toString();
         }
-        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        if (date.getDate() < 10) {
+            day = "0" + date.getDate().toString();
+        }
+        return date.getFullYear() + "-" + month + "-" + day;
     }
 
     const handleHourChange = (event : any) => {
@@ -70,7 +73,7 @@ export const DeleteDate = (props : Props) => {
     const handleDateChange = (event : any) => {
         setDate( new Date(getDatesFromEventCalendars(props.event)[event.target.value].date));
         setDateAsString(getYearMonthDay( new Date(getDatesFromEventCalendars(props.event)[event.target.value].date)));
-        GetHoursFromDate(new Date(getDatesFromEventCalendars(props.event)[event.target.value].date), {
+        GetHoursFromDate(getDatesFromEventCalendars(props.event)[event.target.value].string, {
                 onCompleted: (data) => {
                     setHours(data)
                 }, onError: (error) => {
