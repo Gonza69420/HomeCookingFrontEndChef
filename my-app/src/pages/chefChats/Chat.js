@@ -7,11 +7,11 @@ import {
     findChatMessage,
 } from "./util/ApiUtil.js";
 //import { useRecoilValue, useRecoilState } from "recoil";
-// import {
-//     loggedInUser,
-//     chatActiveContact,
-//     chatMessages,
-// } from "./globalState";
+ import {
+     loggedInUser,
+   chatActiveContact,
+     chatMessages,
+ } from "./atom/globalState.js";
 import ScrollToBottom from "react-scroll-to-bottom";
 import {GetContacts} from "../../queries/ChatQueries.tsx";
 import {GetUserData} from "../../queries/ChefQuerries.tsx";
@@ -24,7 +24,8 @@ var stompClient = null;
 export const Chat = (props) => {
     const [text, setText] = useState("");
     const [contacts, setContacts] = useState([]);
-    const [activeContact, setActiveContact] = useState([])
+    const [activeContact, setActiveContact] = useState({})
+    const [activeContactID , setActiveContactID] = useState(0)
     const [messages, setMessages] = useState([])
     const [currentUser , setChefData] = useState({
         id: 0,
@@ -51,7 +52,7 @@ export const Chat = (props) => {
         }
         connect();
         loadContacts();
-    }, []);
+    }, [currentUser]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -69,8 +70,9 @@ export const Chat = (props) => {
 
     useEffect(() => {
         if (activeContact === undefined) return;
-        findChatMessages(activeContact.id, currentUser.id).then((msgs) =>
-            setMessages(msgs)
+        findChatMessages(activeContact.id, currentUser.id).then((msgs) => {
+                setMessages(msgs)
+            }
         );
         loadContacts();
     }, [activeContact]);
@@ -97,13 +99,10 @@ export const Chat = (props) => {
 
     const onMessageReceived = (msg) => {
         const notification = JSON.parse(msg.body);
-        const active = JSON.parse(sessionStorage.getItem("recoil-persist"))
-            .chatActiveContact;
-
-        if (active.id === notification.senderId) {
+        console.log(activeContactID)
+        if (activeContact.id === notification.senderId) {
             findChatMessage(notification.id).then((message) => {
-                const newMessages = JSON.parse(sessionStorage.getItem("recoil-persist"))
-                    .chatMessages;
+                const newMessages = [...messages];
                 newMessages.push(message);
                 setMessages(newMessages);
             });
@@ -146,6 +145,7 @@ export const Chat = (props) => {
                 setContacts(users);
                 if (activeContact === undefined && users.length > 0) {
                     setActiveContact(users[0]);
+                    setActiveContactID(users[0].id)
                 }
             })
         );
@@ -186,7 +186,10 @@ export const Chat = (props) => {
                     <ul>
                         {contacts.map((contact) => (
                             <li
-                                onClick={() => setActiveContact(contact)}
+                                onClick={() => {
+                                    setActiveContact(contact)
+                                    setActiveContactID(contact.id)
+                                }}
                                 class={
                                     activeContact && contact.id === activeContact.id
                                         ? "contact active"

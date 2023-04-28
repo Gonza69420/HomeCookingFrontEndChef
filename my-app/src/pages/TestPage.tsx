@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {Chat} from "./chefChats/Chat";
+import {RecoilRoot} from "recoil";
 export const TestPage = () => {
     const [date, setDate] = useState<Date>(new Date());
 
@@ -12,7 +13,9 @@ export const TestPage = () => {
 
     return (
         <div>
+            <RecoilRoot>
             <Chat></Chat>
+            </RecoilRoot>
         </div>
     );
 }
