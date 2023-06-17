@@ -20,12 +20,15 @@ import "./Chat.css";
 var stompClient = null;
 
 
-
 export const Chat = (props) => {
     const [text, setText] = useState("");
     const [contacts, setContacts] = useState([]);
-    const [activeContact, setActiveContact] = useState({})
-    const [activeContactID , setActiveContactID] = useState(0)
+    const [activeContact, setActiveContact] = useState({
+        id: -1,
+        name: "",
+        profilePicture: "https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=612x612&w=0&k=20&c=s0aTdmT5aU6b8ot7VKm11DeID6NctRCpB755rA1BIP0=",
+    })
+    const [activeContactID , setActiveContactID] = useState(activeContact.id)
     const [messages, setMessages] = useState([])
     const [currentUser , setChefData] = useState({
         id: 0,
@@ -99,12 +102,9 @@ export const Chat = (props) => {
 
     const onMessageReceived = (msg) => {
         const notification = JSON.parse(msg.body);
-        console.log(activeContactID)
         if (activeContact.id === notification.senderId) {
-            findChatMessage(notification.id).then((message) => {
-                const newMessages = [...messages];
-                newMessages.push(message);
-                setMessages(newMessages);
+            findChatMessage(notification.id).then((msgs) => {
+                setMessages(msgs)
             });
         } else {
             message.info("Received a new message from " + notification.senderName);
@@ -145,7 +145,6 @@ export const Chat = (props) => {
                 setContacts(users);
                 if (activeContact === undefined && users.length > 0) {
                     setActiveContact(users[0]);
-                    setActiveContactID(users[0].id)
                 }
             })
         );
@@ -181,14 +180,12 @@ export const Chat = (props) => {
                         </div>
                     </div>
                 </div>
-                <div id="search" />
                 <div id="contacts">
-                    <ul>
+                    <ul className={"contactsList"}>
                         {contacts.map((contact) => (
                             <li
                                 onClick={() => {
                                     setActiveContact(contact)
-                                    setActiveContactID(contact.id)
                                 }}
                                 class={
                                     activeContact && contact.id === activeContact.id
@@ -213,27 +210,22 @@ export const Chat = (props) => {
                         ))}
                     </ul>
                 </div>
-                <div id="bottom-bar">
-                    <button id="addcontact">
-                        <i class="fa fa-user fa-fw" aria-hidden="true"></i>{" "}
-                        <span>Profile</span>
-                    </button>
-                    <button id="settings">
-                        <i class="fa fa-cog fa-fw" aria-hidden="true"></i>{" "}
-                        <span>Settings</span>
-                    </button>
-                </div>
+
             </div>
             <div class="content">
                 <div class="contact-profile">
-                    <img src={activeContact && activeContact.profilePicture} alt="" />
-                    <p>{activeContact && activeContact.name}</p>
+                    { activeContact.id !== -1 &&
+                        <>
+                            <img src={activeContact && activeContact.clientProfile.imageURL} alt="" />
+                            <p>{activeContact && activeContact.fullName}</p>
+                        </>
+                    }
                 </div>
                 <ScrollToBottom className="messages">
                     <ul>
                         {messages.map((msg) => (
-                            <li class={msg.senderId === currentUser.id ? "sent" : "replies"}>
-                                {msg.senderId !== currentUser.id && (
+                            <li class={msg.senderId.toString() === currentUser.id.toString() ? "sent" : "replies"}>
+                                {msg.senderId.toString() !== currentUser.id.toString() && (
                                     <img src={activeContact.profilePicture} alt="" />
                                 )}
                                 <p>{msg.content}</p>
@@ -241,6 +233,7 @@ export const Chat = (props) => {
                         ))}
                     </ul>
                 </ScrollToBottom>
+                {activeContact.id !== -1 &&
                 <div class="message-input">
                     <div class="wrap">
                         <input
@@ -266,6 +259,7 @@ export const Chat = (props) => {
                         />
                     </div>
                 </div>
+                }
             </div>
         </div>
     );

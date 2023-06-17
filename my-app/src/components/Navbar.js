@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from 'react'
 import {MenuItems} from './MenuItems';
 import './Navbar.css';
 import { Buttonn } from './Button';
+import {Bell} from "./Notifications/Bell.tsx";
 
 
 const Navbar = ()=> {
@@ -27,6 +28,8 @@ const Navbar = ()=> {
               )
             })}
           </ul>
+          <Bell/>
+
           <Buttonn onClick={logOutClick}>Log Out</Buttonn>
       </nav>
     )

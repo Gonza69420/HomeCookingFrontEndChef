@@ -11,6 +11,7 @@ import { Solicitud } from './pages/Solicitud/solicitud';
 import {TestPage} from "./pages/TestPage.tsx";
 import { Toaster } from 'react-hot-toast';
 import {CalendarChef} from "./pages/chefCalendar/CalendarChef.tsx";
+import {ChatPage} from "./pages/chefChats/chatPage.tsx";
 
 function App() {
 
@@ -23,7 +24,7 @@ function App() {
           <Route path="/mainPage" element= {<MainPage/>}/>
           <Route path='/profile' element={<ProfileChef/>}/>
           <Route path='/review' element={<ChefReviews/>}/>
-          <Route path="/chat" element={ <Chat/>}/>
+          <Route path="/chat" element={ <ChatPage/>}/>
           <Route path='/solicitud' element={<Solicitud/>}/>
           <Route path="/test" element={<TestPage/>}/>
             <Route path={"/calendarChef"} element={<CalendarChef/>}/>

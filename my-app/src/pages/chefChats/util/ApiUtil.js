@@ -1,4 +1,15 @@
 const AUTH_SERVICE = "http://localhost:8081";
+export function findChatMessage(id) {
+    if (!sessionStorage.getItem("token")) {
+        return Promise.reject("No access token set.");
+    }
+
+    return request({
+        url: CHAT_SERVICE + "/messages/" + id,
+        method: "GET",
+    });
+}
+
 const CHAT_SERVICE = "http://localhost:8080";
 
 const request = (options) => {
@@ -27,7 +38,6 @@ const request = (options) => {
         })
     );
 };
-
 export function getUsers(id ) {
     if (!sessionStorage.getItem("token")) {
         return Promise.reject("No access token set.");
@@ -38,6 +48,7 @@ export function getUsers(id ) {
         method: "GET",
     });
 }
+
 export function countNewMessages(senderId, recipientId) {
     if (!sessionStorage.getItem("token")) {
         return Promise.reject("No access token set.");
@@ -56,17 +67,6 @@ export function findChatMessages(senderId, recipientId) {
 
     return request({
         url: CHAT_SERVICE + "/messages/" + senderId + "/" + recipientId,
-        method: "GET",
-    });
-}
-
-export function findChatMessage(id) {
-    if (!sessionStorage.getItem("token")) {
-        return Promise.reject("No access token set.");
-    }
-
-    return request({
-        url: CHAT_SERVICE + "/messages/" + id,
         method: "GET",
     });
 }
