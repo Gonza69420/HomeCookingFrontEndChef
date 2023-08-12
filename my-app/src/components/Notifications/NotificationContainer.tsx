@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
-import {
-    UseGetAlreadyReadNotifications,
-    UseGetUnReadNotifications
-} from '../../queries/UseGetNotification.tsx';
 import { NotificationTab } from './Notification.tsx';
 import Spinner from '../Spinner/Spinner.tsx';
 import axios from 'axios';
@@ -17,23 +13,16 @@ interface Notification {
 
 interface NotificationContainer {
     unReadNotifications: Notification[];
+    alreadyReadNotifications: Notification[];
     setUnRead: (r: Notification[]) => any;
+    setAlreadyRead: (r: Notification[]) => any;
 }
 
 export const NotificationContainer = (props: NotificationContainer) => {
-    const [AlreadyRead, setAlreadyRead] = useState<Notification[]>([] as Notification[]);
     const [showUnRead, setShowUnRead] = useState<boolean>(false);
     const [hasUnreadNotifications, setHasUnreadNotifications] = useState<boolean>(false);
     const [unReadDateWasTrimmed, setUnReadDateWasTrimmed] = useState<boolean>(false);
     const [alreadyReadDateWasTrimmed, setAlreadyReadDateWasTrimmed] = useState<boolean>(false);
-    const { loading } = UseGetAlreadyReadNotifications({
-        onCompleted: (r) => {
-            setAlreadyRead(r);
-        },
-        onError: (e) => {
-            showSubmitError(e.message);
-        }
-    });
 
     useEffect(() => {
         if (props.unReadNotifications.length >= 1 && !unReadDateWasTrimmed) {
@@ -48,15 +37,15 @@ export const NotificationContainer = (props: NotificationContainer) => {
     }, [props.unReadNotifications]);
 
     useEffect(() => {
-        if (AlreadyRead.length >= 1 && !alreadyReadDateWasTrimmed) {
-            const newAlreadyRead = AlreadyRead.map((notification) => {
+        if (props.alreadyReadNotifications.length >= 1 && !alreadyReadDateWasTrimmed) {
+            const newAlreadyRead = props.alreadyReadNotifications.map((notification) => {
                 return { ...notification, date: notification.date.split('T')[0] };
             });
 
-            setAlreadyRead(newAlreadyRead);
+            props.setAlreadyRead(newAlreadyRead);
             setAlreadyReadDateWasTrimmed(true);
         }
-    }, [AlreadyRead]);
+    }, [props.alreadyReadNotifications]);
 
     const showSubmitError = (message) => {
         toast.error(message);
@@ -65,18 +54,6 @@ export const NotificationContainer = (props: NotificationContainer) => {
 
     return (
         <div>
-            {loading ? (
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                        margin: '20px'
-                    }}
-                >
-                    <Spinner></Spinner>
-                </div>
-            ) : (
                 <>
                     {!hasUnreadNotifications ? (
                         <>
@@ -98,16 +75,11 @@ export const NotificationContainer = (props: NotificationContainer) => {
                         </>
                     )}
                 </>
-            )}
+
             {showUnRead ? (
                 <>
-                    {loading ? (
                         <>
-                            <Spinner></Spinner>
-                        </>
-                    ) : (
-                        <>
-                            {AlreadyRead.map((notification) => {
+                            {props.alreadyReadNotifications.map((notification) => {
                                 return (
                                     <>
                                         <NotificationTab
@@ -119,7 +91,7 @@ export const NotificationContainer = (props: NotificationContainer) => {
                                 );
                             })}
                         </>
-                    )}
+
                 </>
             ) : (
                 <>

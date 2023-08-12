@@ -10,11 +10,11 @@ export const Bell = () => {
     const [open, setOpen] = useState<boolean>(false);
     const [hasNotification, setHasNotification] = useState<boolean>(false);
     const [UnRead, setUnRead] = useState<Notification[]>([] as Notification[]);
+    const [AreadyRead, setAreadyRead] = useState<Notification[]>([] as Notification[]);
 
     const showSubmitError = (message) => {
         toast.error(message);
     };
-
 
 
     useEffect(() => {
@@ -24,22 +24,6 @@ export const Bell = () => {
             setHasNotification(true);
         }
     } , [UnRead]);
-
-    useEffect(() => {
-        if (open == true){
-                const config = {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: 'Bearer ' + sessionStorage.getItem('token')
-                    }
-                };
-                axios.put('http://localhost:8080/notifications/' + sessionStorage.getItem("mail"), {}, config);
-
-
-        }
-    } , [open]);
-
-
 
 
     useEffect(() => {
@@ -57,8 +41,12 @@ export const Bell = () => {
     const onConnected = () => {
         console.log("connected");
         stompClient.subscribe(
-            "/user/" + sessionStorage.getItem("id") + "/notifiactions",
+            "/get/unread/" + sessionStorage.getItem("mail") ,
             onNotificationReceived
+        );
+        stompClient.subscribe(
+            "/get/seen/" + sessionStorage.getItem("mail") ,
+            AreadyReadNotification
         );
     };
 
@@ -66,14 +54,26 @@ export const Bell = () => {
         console.log(err);
     };
 
+    const AreadyReadNotification = (payload) => {
+        const notification = JSON.parse(payload.body);
+        setAreadyRead([...AreadyRead, notification]);
+    }
+
     const onNotificationReceived = (payload) => {
         const notification = JSON.parse(payload.body);
         setUnRead([...UnRead, notification]);
     }
 
+    const openBell = () => {
+        setOpen(!open)
+        stompClient.send("/mark/" + sessionStorage.getItem("mail") , {})
+    }
+
     return (
         <div className={'centerBell'}>
-            <div className="bell" onClick={() => setOpen(!open)}>
+            <div className="bell" onClick={() =>
+                openBell()
+            }>
                 {hasNotification ? <div className={'redCircle'}></div> : <></>}
                 <AiFillBell
                     style={{
@@ -94,6 +94,8 @@ export const Bell = () => {
                             <NotificationContainer
                                 unReadNotifications={UnRead}
                                 setUnRead={setUnRead}
+                                alreadyReadNotifications={AreadyRead}
+                                setAreadyRead={setAreadyRead}
                             ></NotificationContainer>
                         </div>
                     </div>

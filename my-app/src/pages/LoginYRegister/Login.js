@@ -47,7 +47,6 @@ export const Login = () => {
                         sessionStorage.setItem("mail", data.email);
                         sessionStorage.setItem('token', data.accessToken);
                         sessionStorage.setItem("id", data.id);
-                        console.log(data);
                         navigate('/mainPage');
                     }).catch(err => toast.error(err));
                 }
