@@ -18,7 +18,8 @@ export const Register = () => {
         lastName: '',
         phone: '',
         address: '',
-        dni: ''
+        dni: '',
+        CBU: ''
 
     })
 
@@ -27,8 +28,12 @@ export const Register = () => {
             toast.error('Passwords do not match');
             return;
         }
-        if(data.username === '' || data.password === '' || data.confirmPassword === '' || data.firstName === '' || data.lastName === '' || data.phone === '' || data.address === '' || data.dni === '') {
+        if(data.username === '' || data.password === '' || data.confirmPassword === '' || data.firstName === '' || data.lastName === '' || data.phone === '' || data.address === '' || data.dni === '' || data.CBU === '') {
             toast.error('Please fill all the fields');
+            return;
+        }
+        if(CBU.length !== 22){
+            toast.error('Invalid CBU');
             return;
         }
         (fetch("http://localhost:8080/api/auth/signup", {
@@ -103,6 +108,10 @@ export const Register = () => {
                         <Form.Label>DNI</Form.Label>
                         <Form.Control type="text" placeholder="DNI" name="dni" onChange={handleChange}/>
                     </Form.Group>
+                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
+                            <Form.Label>CBU</Form.Label>
+                            <Form.Control type="text" placeholder="CBU" onChange={handleChange} name="CBU" />
+                        </Form.Group>
                         <Button variant="contained" type="submit" className={"buttonSubmitRegister"} onClick={(e) => onSubmit(e)}>
                             Submit
                         </Button>

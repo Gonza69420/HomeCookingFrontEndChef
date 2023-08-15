@@ -8,10 +8,12 @@ import {getAvailableChefDates, getChefDates} from "../../queries/DateQueries.tsx
 import toast from "react-hot-toast";
 import {EventCalendar} from "../../Models/EventCalendar.tsx";
 import {DeleteDate} from "../../components/AddDate/Delete/deleteDate.tsx";
+import {GetUserData} from "../../queries/ChefQuerries.tsx";
 
 export const CalendarChef = () => {
     const [openAddDate, setOpenAddDate] = useState<boolean>(false);
     const [openRemoveDate, setOpenRemoveDate] = useState<boolean>(false);
+    const chefData = GetUserData();
 
     const [events , setEvents] = useState<EventCalendar[]>([]);
 
@@ -40,7 +42,7 @@ export const CalendarChef = () => {
             <Navbar/>
             <div className='containerprofileClient'>
                 <div className="containerTittles">
-                    <h1 className='Tittles'>Agenda</h1>
+                    <h1 className='Tittles'>Hola! {chefData.firstName}</h1>
                 </div>
 
                 <div className="containerCalendar">

@@ -21,13 +21,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
-          <Route path="/mainPage" element= {<MainPage/>}/>
+          <Route path="/mainPage" element= {<CalendarChef/>}/>
           <Route path='/profile' element={<ProfileChef/>}/>
           <Route path='/review' element={<ChefReviews/>}/>
           <Route path="/chat" element={ <ChatPage/>}/>
           <Route path='/solicitud' element={<Solicitud/>}/>
           <Route path="/test" element={<TestPage/>}/>
-            <Route path={"/calendarChef"} element={<CalendarChef/>}/>
         </Routes>
       </Router>
         <Toaster
