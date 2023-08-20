@@ -6,7 +6,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 interface Notification {
-    text: string;
+    message: string;
     date: string;
     hasBeenSeen: boolean;
 }
@@ -65,7 +65,7 @@ export const NotificationContainer = (props: NotificationContainer) => {
                                 return (
                                     <>
                                         <NotificationTab
-                                            text={notification.text}
+                                            text={notification.message}
                                             date={notification.date}
                                             hasBeenSeen={false}
                                         />
@@ -83,7 +83,7 @@ export const NotificationContainer = (props: NotificationContainer) => {
                                 return (
                                     <>
                                         <NotificationTab
-                                            text={notification.text}
+                                            text={notification.message}
                                             date={notification.date}
                                             hasBeenSeen={true}
                                         />

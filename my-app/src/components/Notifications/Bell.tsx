@@ -4,13 +4,18 @@ import { NotificationContainer } from './NotificationContainer.tsx';
 import './Bell.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
+import {
+    UseGetAlreadyReadNotifications,
+    UseGetUnReadNotifications,
+    UseMarkNotificationAsRead
+} from "../../queries/UseGetNotification.tsx";
 var stompClient = null;
 
 export const Bell = () => {
     const [open, setOpen] = useState<boolean>(false);
     const [hasNotification, setHasNotification] = useState<boolean>(false);
     const [UnRead, setUnRead] = useState<Notification[]>([] as Notification[]);
-    const [AreadyRead, setAreadyRead] = useState<Notification[]>([] as Notification[]);
+    const [AlreadyRead, setAlreadyRead] = useState<Notification[]>([] as Notification[]);
 
     const showSubmitError = (message) => {
         toast.error(message);
@@ -25,11 +30,6 @@ export const Bell = () => {
         }
     } , [UnRead]);
 
-
-    useEffect(() => {
-        connect();
-    }, []);
-
     const connect = () => {
         const Stomp = require("stompjs");
         var SockJS = require("sockjs-client");
@@ -38,17 +38,39 @@ export const Bell = () => {
         stompClient.connect({}, onConnected, onError);
     };
 
+    const { loading: unReadLoading, data: unReadData } = UseGetUnReadNotifications({
+        onCompleted: (data) => {
+            console.log(data)
+            setUnRead([...UnRead, ...data]);
+        },
+        onError: (error) => {
+            console.error('Error fetching unread notifications:', error);
+        }
+    });
+
+    const { loading: alreadyReadLoading, data: alreadyReadData } = UseGetAlreadyReadNotifications({
+        onCompleted: (data) => {
+            console.log(data)
+            setAlreadyRead([...AlreadyRead, ...data]);
+        },
+        onError: (error) => {
+            console.error('Error fetching unread notifications:', error);
+        }
+    });
+
+
+
     const onConnected = () => {
         console.log("connected");
         stompClient.subscribe(
-            "/get/unread/" + sessionStorage.getItem("mail") ,
+            "/user/" + sessionStorage.getItem("id") + "/queue/events",
             onNotificationReceived
         );
-        stompClient.subscribe(
-            "/get/seen/" + sessionStorage.getItem("mail") ,
-            AreadyReadNotification
-        );
     };
+
+    useEffect(() => {
+        connect();
+    }, []);
 
     const onError = (err) => {
         console.log(err);
@@ -56,7 +78,7 @@ export const Bell = () => {
 
     const AreadyReadNotification = (payload) => {
         const notification = JSON.parse(payload.body);
-        setAreadyRead([...AreadyRead, notification]);
+        setAlreadyRead([...AlreadyRead, notification]);
     }
 
     const onNotificationReceived = (payload) => {
@@ -65,8 +87,19 @@ export const Bell = () => {
     }
 
     const openBell = () => {
+        if (open) {
+            setUnRead([]);
+            setAlreadyRead([...UnRead , ...AlreadyRead]);
+        }
         setOpen(!open)
-        stompClient.send("/mark/" + sessionStorage.getItem("mail") , {})
+        UseMarkNotificationAsRead({
+            onCompleted: (data) => {
+
+            } ,
+            onError: (error) => {
+
+            }
+        })
     }
 
     return (
@@ -94,8 +127,8 @@ export const Bell = () => {
                             <NotificationContainer
                                 unReadNotifications={UnRead}
                                 setUnRead={setUnRead}
-                                alreadyReadNotifications={AreadyRead}
-                                setAreadyRead={setAreadyRead}
+                                alreadyReadNotifications={AlreadyRead}
+                                setAlreadyRead={setAlreadyRead}
                             ></NotificationContainer>
                         </div>
                     </div>
