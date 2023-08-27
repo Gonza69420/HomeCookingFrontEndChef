@@ -19,7 +19,8 @@ export const Register = () => {
         phone: '',
         address: '',
         dni: '',
-        CBU: ''
+        CBU: '',
+        routingNum: ''
 
     })
 
@@ -30,10 +31,6 @@ export const Register = () => {
         }
         if(data.username === '' || data.password === '' || data.confirmPassword === '' || data.firstName === '' || data.lastName === '' || data.phone === '' || data.address === '' || data.dni === '' || data.CBU === '') {
             toast.error('Please fill all the fields');
-            return;
-        }
-        if(CBU.length !== 22){
-            toast.error('Invalid CBU');
             return;
         }
         (fetch("http://localhost:8080/api/auth/signup", {
@@ -49,7 +46,9 @@ export const Register = () => {
                 phoneNumber: data.phone,
                 address: data.address,
                 dni: data.dni,
-                role:"ROLE_CHEF"
+                role:"ROLE_CHEF",
+                accountNumber: data.CBU,
+                routingNumber: data.routingNum
             })
              })
             .then(res => {
@@ -57,7 +56,7 @@ export const Register = () => {
                     toast.error( 'Invalid Credentials');
                 } 
                 else {
-                    navigate("/")
+                    //navigate("/")
                 }
                 }
             )).catch(err => toast(err.message));
@@ -111,6 +110,10 @@ export const Register = () => {
                         <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
                             <Form.Label>CBU</Form.Label>
                             <Form.Control type="text" placeholder="CBU" onChange={handleChange} name="CBU" />
+                        </Form.Group>
+                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
+                            <Form.Label>Numero de banco</Form.Label>
+                            <Form.Control type="text" placeholder="Numero de Banco" onChange={handleChange} name="routingNum" />
                         </Form.Group>
                         <Button variant="contained" type="submit" className={"buttonSubmitRegister"} onClick={(e) => onSubmit(e)}>
                             Submit
