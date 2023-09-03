@@ -102,12 +102,11 @@ export const Chat = (props) => {
 
     const onMessageReceived = (msg) => {
         const notification = JSON.parse(msg.body);
+        console.log(activeContact.id)
         if (activeContact.id === notification.senderId) {
             findChatMessage(notification.id).then((msgs) => {
                 setMessages(msgs)
             });
-        } else {
-            message.info("Received a new message from " + notification.senderName);
         }
         loadContacts();
     };
@@ -144,7 +143,7 @@ export const Chat = (props) => {
             Promise.all(promises).then((users) => {
                 setContacts(users);
                 if (activeContact === undefined && users.length > 0) {
-                    setActiveContact(users[0]);
+                    //setActiveContact(users[0]);
                 }
             })
         );
