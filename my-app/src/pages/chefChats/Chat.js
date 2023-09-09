@@ -28,8 +28,8 @@ export const Chat = (props) => {
         name: "",
         profilePicture: "https://media.istockphoto.com/id/1223671392/vector/default-profile-picture-avatar-photo-placeholder-vector-illustration.jpg?s=612x612&w=0&k=20&c=s0aTdmT5aU6b8ot7VKm11DeID6NctRCpB755rA1BIP0=",
     })
-    const [activeContactID , setActiveContactID] = useState(activeContact.id)
     const [messages, setMessages] = useState([])
+    const [activeContactIndex , setActiveContactIndex] = useState(0)
     const [currentUser , setChefData] = useState({
         id: 0,
         name: "",
@@ -72,7 +72,7 @@ export const Chat = (props) => {
 
 
     useEffect(() => {
-        if (activeContact === undefined) return;
+        if (activeContact.id === -1) return;
         findChatMessages(activeContact.id, currentUser.id).then((msgs) => {
                 setMessages(msgs)
             }
@@ -102,10 +102,11 @@ export const Chat = (props) => {
 
     const onMessageReceived = (msg) => {
         const notification = JSON.parse(msg.body);
-        console.log(activeContact.id)
         if (activeContact.id === notification.senderId) {
             findChatMessage(notification.id).then((msgs) => {
-                setMessages(msgs)
+                const newMessages = [...messages];
+                newMessages.push(msgs);
+                setMessages(newMessages);
             });
         }
         loadContacts();
@@ -142,8 +143,13 @@ export const Chat = (props) => {
         promise.then((promises) =>
             Promise.all(promises).then((users) => {
                 setContacts(users);
-                if (activeContact === undefined && users.length > 0) {
-                    //setActiveContact(users[0]);
+                if (activeContact.id === -1 && users.length > 0) {
+                    console.log(users[activeContactIndex])
+                    setActiveContact({
+                        id: users[activeContactIndex].id,
+                        name: users[activeContactIndex].fullName,
+                        profilePicture: users[activeContactIndex].clientProfile.imageURL
+                    });
                 }
             })
         );
@@ -181,10 +187,15 @@ export const Chat = (props) => {
                 </div>
                 <div id="contacts">
                     <ul className={"contactsList"}>
-                        {contacts.map((contact) => (
+                        {contacts.map((contact, index) => (
                             <li
                                 onClick={() => {
-                                    setActiveContact(contact)
+                                    setActiveContact({
+                                        id: contact.id,
+                                        name: contact.fullName,
+                                        profilePicture: contact.clientProfile.imageURL,
+                                    })
+                                    setActiveContactIndex(index)
                                 }}
                                 class={
                                     activeContact && contact.id === activeContact.id
@@ -215,8 +226,8 @@ export const Chat = (props) => {
                 <div class="contact-profile">
                     { activeContact.id !== -1 &&
                         <>
-                            <img src={activeContact && activeContact.clientProfile.imageURL} alt="" />
-                            <p>{activeContact && activeContact.fullName}</p>
+                            <img src={activeContact && activeContact.profilePicture} alt="" />
+                            <p>{activeContact && activeContact.name}</p>
                         </>
                     }
                 </div>
