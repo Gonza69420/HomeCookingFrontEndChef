@@ -134,3 +134,10 @@
     display:flex;
     justify-content: center;
 }
+
+
+.centerItemsProfleUpload{
+    width: auto;
+    justify-items: center;
+    align-content: center;
+}

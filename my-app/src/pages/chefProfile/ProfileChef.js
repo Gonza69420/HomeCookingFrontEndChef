@@ -554,12 +554,14 @@ export const ProfileChef = () => {
                                 <h1 className='tittle'>Añadir Menu</h1>
 
                                 <br/>
+                                <div className={"centerItemsProfleUpload"}>
                                 <input type="file" className="inputCoso" id="imgupload" onChange={(event) => {
                                     setImageUpload(event.target.files[0]);
                                 }}/>
                                 <label htmlFor='imgupload'>
                                     <button className="btn btn-warning">Upload Image</button>
                                 </label>
+                                </div>
 
                                 <Form>
                                     <Form.Group className="m-3 " controlId="">
