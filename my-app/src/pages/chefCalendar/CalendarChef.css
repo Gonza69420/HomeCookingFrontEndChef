@@ -2,6 +2,7 @@
 
 .containerCalendar{
     height: 20% !important;
+    
 }
 
 .buttonsDateCalendarDiv{
@@ -11,20 +12,28 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
-
+h1 .Tittles{
+    background-color: transparent !important;
+    color: black !important;
+}
+.containerTittles .Tittles{
+    background-color: transparent !important;
+    color: black !important;
+}
 .AgregarFechaButton{
     width: 49% !important;
     height: 100px !important;
     margin-right: 2% !important;
-    font-family: Satoshi, sans-serif;
+    font-family: poppins, sans-serif;
     border-radius: 20px;
 }
 
 .EliminarFechaButton{
     width: 49% !important;
     height: 100px !important;
-    background-color: rgb(233, 22, 14) !important;
-    font-family: Satoshi, sans-serif;
+    background-color: transparent !important;
+    color: black !important;
+    font-family: poppins, sans-serif;
     border-radius: 20px;
 
 }

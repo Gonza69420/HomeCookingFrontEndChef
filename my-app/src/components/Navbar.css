@@ -1,5 +1,5 @@
 .NavbarItems{
-    background: linear-gradient(90deg, rgb(233, 22, 14) 0%, rgb(233, 22, 14) 100%);
+    background: rgb(255, 109, 45);
     height: 80px;
     display: flex;
     justify-content: center;
@@ -8,10 +8,12 @@
     z-index: 1000;
 } 
 
-.navbar-log{
+.navbar-logo{
     color: #fff;
     justify-content: start;
     margin-left: 20px;
+    font: bold;
+    font-family: poppins;
     cursor: pointer;
 }
 
@@ -42,7 +44,7 @@
 }
 
 .nav-link:hover{
-    background-color: rgb(248, 81, 81);
+
     border-radius: 4px;
     transition: all 0.3s ease-in-out;
 }

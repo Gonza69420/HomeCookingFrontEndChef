@@ -42,7 +42,7 @@ export const CalendarChef = () => {
             <Navbar/>
             <div className='containerprofileClient'>
                 <div className="containerTittles">
-                    <h1 className='Tittles'>Hola! {chefData.firstName}</h1>
+                    <h1 className='Tittles'>Bienvenido {chefData.firstName}</h1>
                 </div>
 
                 <div className="containerCalendar">

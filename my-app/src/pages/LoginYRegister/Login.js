@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import {iframeEnabled} from "sockjs-client/lib/utils/iframe";
 import {useNavigate} from "react-router";
 import axios from "axios";
-
+import loginImage from "../../assets/login-hc.png";
 export const Login = () => {
     const [data, setData] = useState({
         username: '',
@@ -66,32 +66,38 @@ export const Login = () => {
         window.location.href = '/register';
     }
 
-    return(
-        <div className={"backgroundColorLogin"}>
-            <div className={"containerLogin"}>
-                <div className={"containerLoginForm"}>
-                    <h1>HomeCooking | Login Chef</h1>
-                    <div className={"formLogin"}>
-                     <Form.Group className="userNameLogin" controlId="exampleForm.ControlInput0">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="email" placeholder="name@example.com" onChange={(e) =>changeUserName(e)} name="username"/>
-                    </Form.Group>
-                    <Form.Group className="userNameLogin" controlId="exampleForm.ControlInput1" >
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" onChange={(e) => changePassword(e)} name="password"/>
-                    </Form.Group>
+    return (
+        <div className="containerLogin">
+            <div className="loginSplitScreen">
+                <div className="loginScreenLeft" style={{ backgroundColor: 'rgb(238, 142, 64)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <img src={loginImage} alt="Login" />
+                </div>
+                <div className="loginScreenRight">
+                    <div className="containerLoginForm">
+                        <div className="containerLoginCenter">
+                            <h1 style={{ fontWeight: 'bold' }}>HomeCooking | Login Chef</h1>
+                            <div className="formLogin">
+                                <Form.Group className="userNameLogin" controlId="exampleForm.ControlInput0">
+                                    <Form.Label style={{ textAlign: 'left' }}>Username</Form.Label>
+                                    <Form.Control type="email" placeholder="name@example.com" onChange={(e) => changeUserName(e)} name="username"/>
+                                </Form.Group>
+                                <Form.Group className="userNameLogin" controlId="exampleForm.ControlInput1">
+                                    <Form.Label style={{ textAlign: 'left' }}>Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" onChange={(e) => changePassword(e)} name="password"/>
+                                </Form.Group>
+    
+                                <Button variant="contained" className="LogInButtonChef" style={{ padding: "20", margin: "10px",backgroundColor: '#FF6D2D', color: '#fff' }} onClick={(e) => onSubmit(e)}>
+                                    Log In
+                                </Button>
 
-                    <Button variant={"contained"} className={"LogInButtonChef"} onClick={(e) => onSubmit(e)}>
-                        Log In
-                    </Button>
-
-                    <Button variant={"contained"} className={"LogInButtonChef"} onClick={handleRegister}>
-                        Register
-                    </Button>
+                                <Button variant="contained" className="LogInButtonChef" style={{ margin: "10px",backgroundColor: '#ffc49b', color: 'white', }} onClick={handleRegister}>
+                                    Register
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-           </div>
+            </div>
         </div>
-    )
+    );
 }
-
