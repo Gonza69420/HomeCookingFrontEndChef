@@ -27,27 +27,19 @@ export const Login = () => {
         axios.post("http://localhost:8080/api/auth/signin", {
             mail: data.username,
             password: data.password,
-            role: "ROLE_CLIENT"
+            role: "ROLE_CHEF"
 
-        }).then(res => {
-            if (res.status === 401 || res.status === 400 || data.username === '' || data.password === '') {
-                toast.error( 'Invalid Credentials');
-            }
-            else {
-                toast.success( 'Login Successful');
-                sessionStorage.setItem("mail" , data.username);
-                sessionStorage.setItem('token', res.data.accessToken);
-                sessionStorage.setItem('id', res.data.id);
+        }).then((response) => {
+            if (response.data.accessToken) {
+                sessionStorage.setItem("token", response.data.accessToken);
+                sessionStorage.setItem("mail", data.username);
+                sessionStorage.setItem('id', response.data.id);
+
                 navigate('/mainPage');
-
             }
-        }).catch(err => {
-            console.log(err)
-            toast(err.message)
-        })
-
-
-
+        }).catch((error) => {
+            toast.error(error.message);
+        });
     }
     const changeUserName = (e) => {
         setData({
