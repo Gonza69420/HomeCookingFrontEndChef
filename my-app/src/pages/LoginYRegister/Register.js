@@ -70,56 +70,56 @@ export const Register = () => {
     }
 
     return(
-        <div className="containerLogin">
-            <div className={"containerRegisterLogin"}>
-                <h1 className={"registerTittle"}>Register</h1>
-                <br/>
-                    <Form id="sign in-form" action="" className = "text-center w-100">
-                     <Form.Group className="registerFields" controlId="exampleForm.ControlInput0">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="name@example.com" onChange={handleChange} name="username"/>
-                    </Form.Group>
-                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput1" >
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" onChange={handleChange} name="password"/>
-                    </Form.Group>
-                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" onChange={handleChange} name="confirmPassword" />
-                    </Form.Group>
-                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput3" >
-                        <Form.Label>First Name</Form.Label>
-                        <Form.Control type="text" placeholder="First Name" name="firstName" onChange={handleChange}/>
-                    </Form.Group>
-                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput4">
-                        <Form.Label>Last Name</Form.Label>
-                        <Form.Control type="text" placeholder="Last Name" name ="lastName" onChange={handleChange} />
-                    </Form.Group>
-                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput5">
-                        <Form.Label>Phone Number</Form.Label>
-                        <Form.Control type="text" placeholder="Phone Number" name= "phone"onChange={handleChange}/>
-                    </Form.Group>
-                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput6">
-                        <Form.Label>Adress</Form.Label>
-                        <Form.Control type="text" placeholder="Adress" name="address" onChange={handleChange}/>
-                    </Form.Group>
-                    <Form.Group className="registerFields" controlId="exampleForm.ControlInput6">
-                        <Form.Label>DNI</Form.Label>
-                        <Form.Control type="text" placeholder="DNI" name="dni" onChange={handleChange}/>
-                    </Form.Group>
-                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
-                            <Form.Label>CBU</Form.Label>
-                            <Form.Control type="text" placeholder="CBU" onChange={handleChange} name="CBU" />
+        <div className={"containerRegister"}>
+                <div className={"containerRegisterLogin"}>
+                    <h1 className={"registerTittle"}>Register</h1>
+                    <br/>
+                        <Form id="sign in-form" action="" className = "text-center w-100">
+                         <Form.Group className="registerFields" controlId="exampleForm.ControlInput0">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control type="email" placeholder="name@example.com" onChange={handleChange} name="username"/>
+                        </Form.Group>
+                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput1" >
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" placeholder="Password" onChange={handleChange} name="password"/>
                         </Form.Group>
                         <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
-                            <Form.Label>Numero de banco</Form.Label>
-                            <Form.Control type="text" placeholder="Numero de Banco" onChange={handleChange} name="routingNum" />
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Control type="password" placeholder="Password" onChange={handleChange} name="confirmPassword" />
                         </Form.Group>
-                        <Button variant="contained" type="submit" className={"buttonSubmitRegister"} onClick={(e) => onSubmit(e)}>
-                            Submit
-                        </Button>
-                    </Form>
-            </div>
+                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput3" >
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control type="text" placeholder="First Name" name="firstName" onChange={handleChange}/>
+                        </Form.Group>
+                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput4">
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control type="text" placeholder="Last Name" name ="lastName" onChange={handleChange} />
+                        </Form.Group>
+                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput5">
+                            <Form.Label>Phone Number</Form.Label>
+                            <Form.Control type="text" placeholder="Phone Number" name= "phone"onChange={handleChange}/>
+                        </Form.Group>
+                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput6">
+                            <Form.Label>Adress</Form.Label>
+                            <Form.Control type="text" placeholder="Adress" name="address" onChange={handleChange}/>
+                        </Form.Group>
+                        <Form.Group className="registerFields" controlId="exampleForm.ControlInput6">
+                            <Form.Label>DNI</Form.Label>
+                            <Form.Control type="text" placeholder="DNI" name="dni" onChange={handleChange}/>
+                        </Form.Group>
+                            <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
+                                <Form.Label>CBU</Form.Label>
+                                <Form.Control type="text" placeholder="CBU" onChange={handleChange} name="CBU" />
+                            </Form.Group>
+                            <Form.Group className="registerFields" controlId="exampleForm.ControlInput2">
+                                <Form.Label>Numero de banco</Form.Label>
+                                <Form.Control type="text" placeholder="Numero de Banco" onChange={handleChange} name="routingNum" />
+                            </Form.Group>
+                            <Button variant="contained" type="submit" className={"buttonSubmitRegister"} onClick={(e) => onSubmit(e)}>
+                                Submit
+                            </Button>
+                        </Form>
+                </div>
         </div>
   )
 }

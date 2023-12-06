@@ -31,9 +31,9 @@ h1 .Tittles{
 .EliminarFechaButton{
     width: 49% !important;
     height: 100px !important;
-    background-color: transparent !important;
-    color: black !important;
-    font-family: poppins, sans-serif;
+    background-color: rgb(233, 22, 14) !important;
+    font-family: Satoshi, sans-serif;
     border-radius: 20px;
+
 
 }

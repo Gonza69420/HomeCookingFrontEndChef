@@ -22,31 +22,32 @@
 
 .containerRegisterLogin{
     display: flex;
-    flex: 60%;
     flex-direction: column;
     width: 30%;
-    position: absolute;
-    top: 10%;
-    background-color: #FF6D2D;
+    margin-top: 2%;
+    background-color: rgb(238, 142, 64);
     border-radius: 50px;
+    margin-bottom: 2% !important;
+
 }
 
-.registerFields {
+.registerFields{
     width: 80%;
-    margin-bottom: 10px;
+    margin: 0 auto;
+    padding: 5px;
+    border-radius: 500px !important
 }
+
 
 .registerTittle {
     text-align: center;
-    color: #fff;
-}
+    margin-top: 20px;
 
-.buttonSubmitRegister {
-    width: 80%;
-    background-color: #fff;
-    color: #FF6D2D;
-    border-radius: 20px;
-    margin-top: 10px;
+}
+.buttonSubmitRegister{
+    margin-top: 10px !important;
+    margin-bottom: 15px !important;
+    width: 30%;
 }
 .LogInButtonChef{
     padding-left: 10px;
@@ -62,5 +63,11 @@
     color: black;
     align-items: left;
     justify-content: left;
+}
+
+.containerRegister{
+    display: flex;
+    align-content: center;
+    justify-content: center;
 }
 
